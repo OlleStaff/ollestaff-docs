@@ -1,56 +1,58 @@
 {
-    "openapi": "3.1.0",
-    "info": {
-      "title": "OpenAPI definition",
-      "version": "v0"
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OLLESTAFF-API DOCUMENTATION",
+    "version": "0.0.1-SNAPSHOT"
+  },
+  "servers": [
+    {
+      "url": "https://dev.ollestaff.com",
+      "description": "dev"
     },
-    "servers": [
-      {
-        "url": "http://localhost:8080",
-        "description": "Generated server url"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Auth",
-        "description": "Auth API"
-      }
-    ],
-    "paths": {
-      "/login/naver": {
-        "get": {
-          "tags": [
-            "Auth"
-          ],
-          "summary": "네이버 로그인 API",
-          "description": "네이버 로그인 이후 redirect 되는 API",
-          "operationId": "login",
-          "parameters": [
-            {
-              "name": "code",
-              "in": "query",
-              "description": "code",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
+    {
+      "url": "http://localhost:8080",
+      "description": "local"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Auth API"
+    }
+  ],
+  "paths": {
+    "/login/naver": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "네이버 로그인 API",
+        "description": "네이버 로그인 이후 redirect 되는 API",
+        "operationId": "login",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "description": "code",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "로그인 성공"
-            },
-            "401": {
-              "description": "로그인 실패"
-            },
-            "404": {
-              "description": "회원가입 필요"
-            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "로그인 성공"
+          },
+          "401": {
+            "description": "로그인 실패"
+          },
+          "404": {
+            "description": "회원가입 필요"
           }
         }
       }
-    },
-    "components": {
-  
     }
-  }
+  },
+  "components": {}
+}

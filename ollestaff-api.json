@@ -39,7 +39,13 @@
               "schema": {
                 "$ref": "#/components/schemas/SignUpRequest"
               },
-              "example": "{\n    \"nickname\" \u003d \"미밍\",\n    \"phone\" \u003d \"01088454426\"\n    \"phoneVerificationCode\"\u003d\"000000\",\n    \"imageUrl\"\u003d\"https://example.jpg\",\n    \"birthDate\"\u003d\"20000224\"\n}\n"
+              "example": {
+                "nickname": "미밍",
+                "phone": "01088454426",
+                "phoneVerificationCode": "000000",
+                "imageUrl": "https://example.jpg",
+                "birthDate": 20000224
+              }
             }
           },
           "required": true
@@ -60,11 +66,15 @@
         "operationId": "getMeMinimum",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "성공",
             "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetMeMinimumResponse"
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "nickname": "미밍",
+                    "type": "STAFF"
+                  }
                 }
               }
             }
@@ -206,23 +216,6 @@
         "required": [
           "birthDate"
         ]
-      },
-      "GetMeMinimumResponse": {
-        "type": "object",
-        "properties": {
-          "nickname": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "UNDECIDED",
-              "GUESTHOUSE",
-              "STAFF",
-              "ADMIN"
-            ]
-          }
-        }
       }
     }
   }

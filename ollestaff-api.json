@@ -88,7 +88,7 @@
           "AUTH"
         ],
         "summary": "네이버 로그인",
-        "description": "네이버 로그인 후 redirect에 의해 호출 되는 엔드 포인트",
+        "description": "로그인 URL (SDK쓸거면 query param 추출해서 쓰세요):\nhttps://nid.naver.com/oauth2.0/authorize?response_type\u003dcode\u0026client_id\u003dr1x7aq7ELPN0Ik6AuDoD\u0026redirect_uri\u003dhttp%3A%2F%2Follestaff-prod-443583607.ap-northeast-2.elb.amazonaws.com/login/oauth/naver\u0026state\u003drandomstate\n네이버 로그인 후 redirect에 의해 호출 되는 엔드 포인트\n",
         "operationId": "loginNaver",
         "parameters": [
           {
@@ -143,7 +143,7 @@
           "AUTH"
         ],
         "summary": "카카오 로그인",
-        "description": "카카오 로그인 후 redirect에 의해 호출 되는 엔드 포인트",
+        "description": "로그인 URL (SDK쓸거면 query param 추출해서 쓰세요):\nhttps://kauth.kakao.com/oauth/authorize?client_id\u003d95c95ba81c39fcc79d6452dc0918c6df\u0026redirect_uri\u003dhttp://ollestaff-prod-443583607.ap-northeast-2.elb.amazonaws.com/login/kakao/success\u0026response_type\u003dcode\n카카오 로그인 후 redirect에 의해 호출 되는 엔드 포인트",
         "operationId": "loginKakao",
         "parameters": [
           {

@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://dev.ollestaff.com",
+      "url": "http://ollestaff-prod-443583607.ap-northeast-2.elb.amazonaws.com",
       "description": "dev"
     },
     {

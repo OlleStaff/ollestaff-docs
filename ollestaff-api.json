@@ -2,6 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "OLLESTAFF-API DOCUMENTATION",
+    "description": "application/json 형식의 모든 응답 body는 status: String, message: String, data: Object(Any)로 이루어짐.\n응답에 대해 분기처리는 모두 status 기준으로 하면 됩니다. (혹시라도 다른 형식으로 오면 제보 바랍니다)\n로그인 필요하면 status: NEED_LOGIN, 로그인 했는데 권한 안맞으면 status: NO_AUTHORITY\n",
     "version": "0.0.1-SNAPSHOT"
   },
   "servers": [
@@ -35,24 +36,277 @@
         "requestBody": {
           "description": "등록할 사용자 정보",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/SignUpRequest"
               },
+              "example": "nickname: 미밍\nphone: 01088454426\nphoneVerificationCode: 000000\nbirthDate: 20000224\nimage: (FILE) 이미지 파일\nagreements: 올래스텝 이용약관_2025-04-09_v1\nagreements: 개인정보처리방침_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-필수_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-마케팅_2025-04-09_v1\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "회원가입 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/phone/verification-requests": {
+      "post": {
+        "tags": [
+          "USER"
+        ],
+        "summary": "전화번호 인증번호 요청",
+        "description": "아직 실제 번호 인증 하지는 않으니까 000000 으로 해주세요",
+        "operationId": "requestPhoneVerification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneVerificationRequest"
+              },
               "example": {
-                "nickname": "미밍",
-                "phone": "01088454426",
-                "phoneVerificationCode": "000000",
-                "imageUrl": "https://example.jpg",
-                "birthDate": 20000224
+                "phone": "01012345678"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "302": {
-            "description": "회원가입 성공(Redirect : /users/me/minimum)"
+          "200": {
+            "description": "전화번호 인증번호 요청 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": [
+          "AUTH"
+        ],
+        "summary": "로그아웃",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "로그아웃 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/naver": {
+      "post": {
+        "tags": [
+          "AUTH"
+        ],
+        "summary": "네이버 로그인",
+        "operationId": "loginNaver",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NaverAuthenticationRequest"
+              },
+              "example": {
+                "code": "AAAAQ-PMcqX3E1AncCVvex1mbWlzmjnhB31nc3xvs80xZI0xgf4CkQZveZnoGR3UlGRP0U4DXTN6Hn0SnXfJcxDfk_YlHqnjhSw6jeDTRCqq4rTE",
+                "state": "randomState"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "로그인 성공 또는 회원가입 필요",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "로그인 성공": {
+                    "description": "로그인 성공",
+                    "value": {
+                      "status": "SUCCESS"
+                    }
+                  },
+                  "회원가입 필요": {
+                    "description": "회원가입 필요",
+                    "value": {
+                      "status": "USER_NEED_SIGNUP",
+                      "message": "회원가입을 진행해 주세요."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "로그인 실패",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "LOGIN_FAILED",
+                  "message": "로그인 실패"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/kakao": {
+      "post": {
+        "tags": [
+          "AUTH"
+        ],
+        "summary": "카카오 로그인",
+        "operationId": "loginKakao",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KakaoAuthenticationRequest"
+              },
+              "example": {
+                "code": "AAAAQ-PMcqX3E1AncCVvex1mbWlzmjnhB31nc3xvs80xZI0xgf4CkQZveZnoGR3UlGRP0U4DXTN6Hn0SnXfJcxDfk_YlHqnjhSw6jeDTRCqq4rTE"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "로그인 성공 또는 회원가입 필요",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "로그인 성공": {
+                    "description": "로그인 성공",
+                    "value": {
+                      "status": "SUCCESS"
+                    }
+                  },
+                  "회원가입 필요": {
+                    "description": "회원가입 필요",
+                    "value": {
+                      "status": "USER_NEED_SIGNUP",
+                      "message": "회원가입을 진행해 주세요."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "로그인 실패",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "LOGIN_FAILED",
+                  "message": "로그인 실패"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/dev": {
+      "post": {
+        "tags": [
+          "AUTH"
+        ],
+        "summary": "로컬/개발 환경 로그인",
+        "operationId": "loginDev",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevAuthenticationRequest"
+              },
+              "example": {
+                "pid": "abc123",
+                "authority": "GUESTHOUSE"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "로그인 성공 또는 회원가입 필요",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "로그인 성공": {
+                    "description": "로그인 성공",
+                    "value": {
+                      "status": "SUCCESS"
+                    }
+                  },
+                  "회원가입 필요": {
+                    "description": "회원가입 필요",
+                    "value": {
+                      "status": "USER_NEED_SIGNUP",
+                      "message": "회원가입을 진행해 주세요."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/type": {
+      "patch": {
+        "tags": [
+          "USER"
+        ],
+        "summary": "타입 변경",
+        "operationId": "changeType",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeTypeRequest"
+              },
+              "example": {
+                "type": "STAFF"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "타입 변경 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
           }
         }
       }
@@ -62,135 +316,22 @@
         "tags": [
           "USER"
         ],
-        "summary": "로그인 후 기본 사용자 정보 (nickname, type)",
+        "summary": "최소 사용자 정보 조회 (nickname, type)",
         "operationId": "getMeMinimum",
         "responses": {
           "200": {
             "description": "성공",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMeMinimumResponse"
+                },
                 "example": {
                   "status": "SUCCESS",
                   "data": {
                     "nickname": "미밍",
                     "type": "STAFF"
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/login/oauth/naver": {
-      "get": {
-        "tags": [
-          "AUTH"
-        ],
-        "summary": "네이버 로그인",
-        "operationId": "loginNaver",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "state",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "로그인 성공 또는 회원가입 필요",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "로그인 성공": {
-                    "description": "로그인 성공",
-                    "value": {
-                      "status": "SUCCESS"
-                    }
-                  },
-                  "회원가입 필요": {
-                    "description": "회원가입 필요",
-                    "value": {
-                      "status": "USER_NEED_SIGNUP",
-                      "message": "회원가입을 진행해 주세요."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "로그인 실패",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "LOGIN_FAILED",
-                  "message": "로그인 실패"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/login/kakao/success": {
-      "get": {
-        "tags": [
-          "AUTH"
-        ],
-        "summary": "카카오 로그인",
-        "operationId": "loginKakao",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "로그인 성공 또는 회원가입 필요",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "로그인 성공": {
-                    "description": "로그인 성공",
-                    "value": {
-                      "status": "SUCCESS"
-                    }
-                  },
-                  "회원가입 필요": {
-                    "description": "회원가입 필요",
-                    "value": {
-                      "status": "USER_NEED_SIGNUP",
-                      "message": "회원가입을 진행해 주세요."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "로그인 실패",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "LOGIN_FAILED",
-                  "message": "로그인 실패"
                 }
               }
             }
@@ -206,30 +347,143 @@
         "properties": {
           "nickname": {
             "type": "string",
+            "description": "닉네임 (2~8자)",
             "maxLength": 8,
             "minLength": 2
           },
           "phone": {
             "type": "string",
-            "minLength": 1
+            "description": "전화번호 (- 없이 숫자만)",
+            "pattern": "^(01[016789])\\d{7,8}$"
           },
           "phoneVerificationCode": {
             "type": "string",
-            "minLength": 1
+            "description": "전화번호 인증 코드 (6자리 숫자)",
+            "pattern": "\\d{6}"
           },
-          "imageUrl": {
-            "type": "string"
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "description": "이미지 파일 (최대 1개, 10MB 이하)"
           },
           "birthDate": {
             "type": "integer",
             "format": "int32",
+            "description": "생년월일 (yyyyMMdd",
             "maximum": 21000101,
             "minimum": 19000101
+          },
+          "agreements": {
+            "type": "array",
+            "description": "동의 항목",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
-          "birthDate"
+          "agreements",
+          "birthDate",
+          "nickname",
+          "phone",
+          "phoneVerificationCode"
         ]
+      },
+      "PhoneVerificationRequest": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "NaverAuthenticationRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "code",
+          "state"
+        ]
+      },
+      "KakaoAuthenticationRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "DevAuthenticationRequest": {
+        "type": "object",
+        "properties": {
+          "pid": {
+            "type": "string",
+            "description": "아무 문자열, 단 unique",
+            "minLength": 1
+          },
+          "authority": {
+            "type": "string",
+            "description": "원하는 권한 선택: NEED_SIGNUP (로그인 완료, 회원가입 X), GUESTHOUSE, STAFF",
+            "enum": [
+              "ANONYMOUS",
+              "NEED_SIGNUP",
+              "UNDECIDED",
+              "GUESTHOUSE",
+              "STAFF",
+              "ADMIN"
+            ],
+            "minLength": 1
+          }
+        },
+        "required": [
+          "authority",
+          "pid"
+        ]
+      },
+      "ChangeTypeRequest": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "UNDECIDED",
+              "GUESTHOUSE",
+              "STAFF",
+              "ADMIN"
+            ]
+          }
+        }
+      },
+      "GetMeMinimumResponse": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "UNDECIDED: 스텝/게스트하우스 선택 필요한 상태 (회원가입 직후), ADMIN: 미구현",
+            "enum": [
+              "UNDECIDED",
+              "GUESTHOUSE",
+              "STAFF",
+              "ADMIN"
+            ]
+          }
+        }
       }
     }
   }

@@ -21,6 +21,10 @@
       "description": "로그인"
     },
     {
+      "name": "APPLICANT",
+      "description": "지원서"
+    },
+    {
       "name": "USER",
       "description": "유저 관련"
     }
@@ -87,6 +91,50 @@
               "application/json": {
                 "example": {
                   "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/guesthouse/business-registration": {
+      "post": {
+        "tags": [
+          "USER (GUESTHOUSE)"
+        ],
+        "summary": "사업자 인증",
+        "operationId": "certificateBusinessRegistration",
+        "requestBody": {
+          "description": "사업자 인증 정보",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CertificateBusinessRegistrationRequest"
+              },
+              "example": "businessName: 올레스텝\nbusinessRegistrationCertificate: (FILE) 이미지 파일, PDF 파일\nagreement: 올래스텝 개인정보 수집 및 이용 동의-사업자 인증_2025-04-09_v1\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "사업자 인증 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "사업자 인증 실패 (이미 사업자 등록이 되어있음)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "BUSINESS_REGISTRATION_ALREADY_CERTIFICATED",
+                  "message": "이미 사업자 등록이 되어있습니다."
                 }
               }
             }
@@ -277,6 +325,105 @@
         }
       }
     },
+    "/applicants": {
+      "get": {
+        "tags": [
+          "APPLICANT"
+        ],
+        "summary": "내 지원서 조회",
+        "operationId": "getMyApplicant",
+        "responses": {
+          "200": {
+            "description": "지원서 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "userId": "1",
+                    "nickname": "hoon",
+                    "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/bd0b323b-8463-4102-99e5-ec795e266009",
+                    "mbti": "ISFP",
+                    "link": "https://github.com/hoon-hoon",
+                    "introduction": "자기소개 입니다.",
+                    "motivation": "어필 사항 입니다.",
+                    "appeal": "없음",
+                    "images": [
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "지원서 조회 권한 없음",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "NO_PERMISSION_TO_VIEW",
+                  "message": "지원서 조회 권한 없음"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "지원서 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "APPLICANT_NOT_FOUND",
+                  "message": "지원서 찾을 수 없음"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "APPLICANT"
+        ],
+        "summary": "지원서 저장(생성)",
+        "operationId": "createApplicant",
+        "requestBody": {
+          "description": "지원서",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApplicantRequest"
+              },
+              "example": "profileImage: (FILE) 이미지 파일\nnickname: hoon\nmbti: ISFP\nlink: https://github.com/hoon-hoon\nintroduction: 자기소개 입니다.\nmotivation: 지원 동기 입니다.\nappeal: 어필 사항 입니다.\nimages: (FILE) 이미지 파일1\nimages: (FILE) 이미지 파일2..\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "지원서 저장 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "지원서 저장 실패 (이미 존재하는 지원서)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "APPLICANT_DUPLICATED",
+                  "message": "이미 지원서가 있습니다."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/type": {
       "patch": {
         "tags": [
@@ -330,7 +477,8 @@
                   "status": "SUCCESS",
                   "data": {
                     "nickname": "미밍",
-                    "type": "STAFF"
+                    "type": "STAFF",
+                    "onboarded": true
                   }
                 }
               }
@@ -397,6 +545,29 @@
           }
         }
       },
+      "CertificateBusinessRegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "businessName": {
+            "type": "string",
+            "description": "사업자명"
+          },
+          "businessRegistrationCertificate": {
+            "type": "string",
+            "format": "binary",
+            "description": "사업자 등록증 (이미지 또는 PDF)"
+          },
+          "agreement": {
+            "type": "string",
+            "description": "개인정보 수집 및 이용 동의"
+          }
+        },
+        "required": [
+          "agreement",
+          "businessName",
+          "businessRegistrationCertificate"
+        ]
+      },
       "NaverAuthenticationRequest": {
         "type": "object",
         "properties": {
@@ -453,6 +624,44 @@
           "pid"
         ]
       },
+      "CreateApplicantRequest": {
+        "type": "object",
+        "properties": {
+          "profileImage": {
+            "type": "string",
+            "format": "binary",
+            "description": "프로필 이미지"
+          },
+          "mbti": {
+            "type": "string",
+            "description": "MBTI"
+          },
+          "link": {
+            "type": "string",
+            "description": "링크 첨부"
+          },
+          "introduction": {
+            "type": "string",
+            "description": "자기소개 작성"
+          },
+          "motivation": {
+            "type": "string",
+            "description": "지원 동기 작성"
+          },
+          "appeal": {
+            "type": "string",
+            "description": "어필 사항"
+          },
+          "images": {
+            "type": "array",
+            "description": "사진 첨부 (최대 6장)",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      },
       "ChangeTypeRequest": {
         "type": "object",
         "properties": {
@@ -482,6 +691,10 @@
               "STAFF",
               "ADMIN"
             ]
+          },
+          "onboarded": {
+            "type": "boolean",
+            "description": "온보딩 여부"
           }
         }
       }

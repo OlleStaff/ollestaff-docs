@@ -422,6 +422,25 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "APPLICANT"
+        ],
+        "summary": "지원서 삭제",
+        "operationId": "deleteApplicant",
+        "responses": {
+          "200": {
+            "description": "지원서 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/users/type": {

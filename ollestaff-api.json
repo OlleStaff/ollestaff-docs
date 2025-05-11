@@ -140,6 +140,25 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "USER (GUESTHOUSE)"
+        ],
+        "summary": "사업자 등록 삭제",
+        "operationId": "deleteBusinessRegistration",
+        "responses": {
+          "200": {
+            "description": "사업자 등록 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/logout": {

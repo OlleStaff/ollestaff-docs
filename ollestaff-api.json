@@ -17,6 +17,10 @@
   ],
   "tags": [
     {
+      "name": "ACCOMPANY-COMMENT",
+      "description": "동행 구하기 댓글"
+    },
+    {
       "name": "AUTH",
       "description": "로그인"
     },
@@ -25,11 +29,363 @@
       "description": "지원서"
     },
     {
+      "name": "ACCOMPANY",
+      "description": "동행 구하기"
+    },
+    {
+      "name": "ACCOMPANY-REPLY",
+      "description": "동행 구하기 답글"
+    },
+    {
       "name": "USER",
       "description": "유저 관련"
     }
   ],
   "paths": {
+    "/accompanies/{accompany_id}": {
+      "get": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "동행글 개별 조회",
+        "operationId": "getAccompany",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "동행글 개별 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccompanyDto"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "id": 1,
+                    "title": "동행구합니다",
+                    "content": "2박 3일이요~",
+                    "createdAt": 1747814063,
+                    "updatedAt": 1747814063,
+                    "images": [
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ddb516b9-6ecf-4f93-afc8-428a927cc405",
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/f4492196-8f94-4456-b53b-e844d2a9393e",
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/46a2180d-5d02-48c0-88f6-22bb68f756ef"
+                    ],
+                    "userId": 1,
+                    "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/fbdfe821-122f-4f2d-b8a0-f464a0d97fb5",
+                    "userNickname": "나는스태프고주희",
+                    "like": true,
+                    "likeCount": 3,
+                    "commentCount": 2
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "동행글 수정",
+        "operationId": "editAccompany",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "동행글 수정 내용",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditAccompanyRequest"
+              },
+              "example": "title: 수정된 동행구합니다\ncontent: 무박 2일이요~\nimages: https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/f7c0d527-744e-48a3-bda6-e90415ae7eca\nimages: 4.JPG (newImages에 들어가는 파일명 그대로)\nimages: https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/91d15912-cc75-4544-95c4-f2920836d612\nnewImages: (FILE) 4.JPG\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "동행글 수정 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "동행글 삭제",
+        "operationId": "deleteAccompany",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "동행글 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accompanies/{accompany_id}/comments/{comment_id}": {
+      "put": {
+        "tags": [
+          "ACCOMPANY-COMMENT"
+        ],
+        "summary": "댓글 수정",
+        "operationId": "editComment",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "댓글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "댓글 수정",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertCommentRequest"
+              },
+              "example": {
+                "content": "수정된 댓글입니다."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "댓글 수정 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ACCOMPANY-COMMENT"
+        ],
+        "summary": "댓글 삭제",
+        "operationId": "deleteComment",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "댓글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "댓글 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accompanies/{accompany_id}/comments/{comment_id}/replies/{reply_id}": {
+      "put": {
+        "tags": [
+          "ACCOMPANY-REPLY"
+        ],
+        "summary": "답글 수정",
+        "operationId": "editReply",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "댓글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "reply_id",
+            "in": "path",
+            "description": "답글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "답글 내용",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertReplyRequest"
+              },
+              "example": {
+                "content": "수정된 답글입니다."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "답글 수정 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ACCOMPANY-REPLY"
+        ],
+        "summary": "답글 삭제",
+        "operationId": "deleteReply",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "댓글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "reply_id",
+            "in": "path",
+            "description": "답글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "답글 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "post": {
         "tags": [
@@ -154,6 +510,228 @@
               "application/json": {
                 "example": {
                   "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews": {
+      "get": {
+        "tags": [
+          "REVIEW"
+        ],
+        "summary": "내가쓴 리뷰 조회",
+        "operationId": "getAllReviewOfGuestHouse",
+        "parameters": [
+          {
+            "name": "employmentId",
+            "in": "query",
+            "description": "공고 id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "cursorId",
+            "in": "query",
+            "description": "마지막 커서 id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "가져올 객체 개수",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "reviewType",
+            "in": "query",
+            "description": "정렬기준",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "리뷰 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "allReviewInfoDTOS": [
+                      {
+                        "reviewId": 5,
+                        "rating": 5,
+                        "title": "결 게스트하우스",
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
+                        ],
+                        "review": "음.... 전 잘 모르겠네요",
+                        "disclosure": true,
+                        "reviewComment": "만족스럽지 못하셨다면 죄송합니다! 더 발전하는 게스트하우스가 되도록 하겠습니다",
+                        "reviewDate": "2025-01-19T05:16:11",
+                        "reviewCommentDate": "2025-05-19T05:16:39",
+                        "hostNickName": "테스트유저(abc123)"
+                      }
+                    ],
+                    "hasNext": false,
+                    "countReview": 2,
+                    "averageRating": 4.5
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "잘못된 경로",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "REVIEW_NOT_FOUND",
+                  "message": "잘못된 경로로 보낸 요청입니다."
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "REVIEW"
+        ],
+        "summary": "리뷰작성",
+        "operationId": "uploadReview",
+        "requestBody": {
+          "description": "곻고에 대한 리뷰 작성",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReviewDTO"
+              },
+              "example": "rating: 2.4\nreview: 사장이 괴팍해요\ndisclosure: true(숨김모드)\nimages: (FILE) 이미지 파일들\nemploymentId: 공고 Id\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "지원서 저장 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "저장 실패",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "INTERNAL_SERVER_ERROR",
+                  "message": "저장에 실패하였습니다."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{review_id}/comments": {
+      "post": {
+        "tags": [
+          "REVIEW_COMMENTS"
+        ],
+        "summary": "리뷰 댓글",
+        "operationId": "uploadReviewComment",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "query",
+            "description": "댓글을 작성할 리뷰의 ID",
+            "example": 1
+          },
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "내 게스트 하우스 리뷰에 대한 댓글 작성",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReviewCommnetDTO"
+              },
+              "example": {
+                "reviewComment": "좋은 글 써주셔서 감사합니다~~"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "리뷰댓글 작성 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "저장 실패",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "INTERNAL_SERVER_ERROR",
+                  "message": "저장에 실패하였습니다."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "존재하지 않는 리뷰",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "INVALID_REVIEW_ID",
+                  "message": "존재하지 않는 리뷰입니다."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "중복된 댓글",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "DUPLICATE_COMMENT",
+                  "message": "이미 이 리뷰에 댓글을 작성하셨습니다."
                 }
               }
             }
@@ -344,6 +922,86 @@
         }
       }
     },
+    "/employments": {
+      "get": {
+        "tags": [
+          "employment-controller"
+        ],
+        "operationId": "getEmploymentById",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "employmentId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                },
+                "required": [
+                  "employmentId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "employment-controller"
+        ],
+        "operationId": "uploadEmployment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "employment": {
+                    "$ref": "#/components/schemas/EmploymentDTO"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                },
+                "required": [
+                  "employment"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/applicants": {
       "get": {
         "tags": [
@@ -462,6 +1120,473 @@
         }
       }
     },
+    "/accompanies": {
+      "get": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "동행글 모두 조회",
+        "operationId": "getAllAccompany",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "마지막으로 조회한 동행글 ID",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 크기 (기본값: 20)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "동행글 모두 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccompaniesResponse"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "accompanies": [
+                      {
+                        "id": 6,
+                        "title": "중문 서핑팟 구합니다",
+                        "content": "ㅈㄱㄴ",
+                        "createdAt": 1747837887,
+                        "updatedAt": 1747837887,
+                        "images": [],
+                        "userId": 1,
+                        "userNickname": "예창언",
+                        "like": false,
+                        "likeCount": 0,
+                        "commentCount": 0
+                      },
+                      {
+                        "id": 5,
+                        "title": "아저씨 이 버스 강남역 가나요",
+                        "content": "타세요~",
+                        "createdAt": 1747837837,
+                        "updatedAt": 1747837837,
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/64361c67-82e4-4baf-8245-7ce4bfb63ee4",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/0e278248-af48-4a91-ab25-26f12b7f4bb8",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/740352bc-f4c9-430e-a00d-1c406d87832a"
+                        ],
+                        "userId": 2,
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
+                        "userNickname": "훈식",
+                        "like": false,
+                        "likeCount": 5,
+                        "commentCount": 1
+                      },
+                      {
+                        "id": 4,
+                        "title": "동행구합니다",
+                        "content": "2박 3일이요~",
+                        "createdAt": 1747837797,
+                        "updatedAt": 1747837797,
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/6883a7f3-37ae-4e8b-a5dd-b5586c71d114",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/dc472501-185c-438e-938c-a630a9c7a75b",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/7509e022-f973-4986-9e43-ff8b3907216d"
+                        ],
+                        "userId": 3,
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/fbdfe821-122f-4f2d-b8a0-f464a0d97fb5",
+                        "userNickname": "나는스태프고주희",
+                        "like": true,
+                        "likeCount": 2,
+                        "commentCount": 3
+                      }
+                    ],
+                    "cursor": 3,
+                    "hasNext": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "동행글 작성",
+        "operationId": "uploadAccompany",
+        "requestBody": {
+          "description": "동행글 작성 내용",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditAccompanyRequest"
+              },
+              "example": "title: 동행구합니다\ncontent: 2박 3일이요~\nimages: (FILE) 1.JPG\nimages: (FILE) 2.JPG\nimages: (FILE) 3.JPG\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "동행글 작성 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accompanies/{accompany_id}/likes": {
+      "post": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "동행글 좋아요",
+        "operationId": "likeAccompany",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "동행글 좋아요 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "동행글 좋아요 취소",
+        "operationId": "unlikeAccompany",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "동행글 좋아요 취소 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accompanies/{accompany_id}/comments": {
+      "get": {
+        "tags": [
+          "ACCOMPANY-COMMENT"
+        ],
+        "summary": "댓글 조회",
+        "operationId": "getComments",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "마지막으로 조회한 댓글 ID",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 크기 (기본값: 20)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "댓글 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCommentsResponse"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "comments": [
+                      {
+                        "id": 1,
+                        "content": "아쉽게도 일정이 안맞을거 같아요 😢",
+                        "createdAt": 1747842252,
+                        "updatedAt": 1747842252,
+                        "userId": 1,
+                        "userNickname": "훈식",
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
+                        "replyCount": 1
+                      },
+                      {
+                        "id": 2,
+                        "content": "저도 갈래요",
+                        "createdAt": 1747842258,
+                        "updatedAt": 1747842258,
+                        "userId": 2,
+                        "userNickname": "나는스태프고주희",
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/fbdfe821-122f-4f2d-b8a0-f464a0d97fb5",
+                        "replyCount": 2
+                      }
+                    ],
+                    "cursor": 2,
+                    "hasNext": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ACCOMPANY-COMMENT"
+        ],
+        "summary": "댓글 쓰기",
+        "operationId": "writeComment",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "댓글 내용",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertCommentRequest"
+              },
+              "example": {
+                "content": "댓글입니다."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "댓글 쓰기 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accompanies/{accompany_id}/comments/{comment_id}/replies": {
+      "get": {
+        "tags": [
+          "ACCOMPANY-REPLY"
+        ],
+        "summary": "답글 조회",
+        "operationId": "getReplies",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "댓글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "마지막으로 조회한 답글 ID",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 크기 (기본값: 20)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "답글 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRepliesResponse"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "replies": [
+                      {
+                        "id": 1,
+                        "content": "다음에 같이가시죠",
+                        "createdAt": 1747842515,
+                        "updatedAt": 1747842515,
+                        "userId": 3,
+                        "userNickname": "예창언"
+                      },
+                      {
+                        "id": 2,
+                        "content": "감사합니다",
+                        "createdAt": 1747842522,
+                        "updatedAt": 1747842522,
+                        "userId": 1,
+                        "userNickname": "훈식",
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0"
+                      }
+                    ],
+                    "cursor": 2,
+                    "hasNext": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ACCOMPANY-REPLY"
+        ],
+        "summary": "답글 쓰기",
+        "operationId": "writeReply",
+        "parameters": [
+          {
+            "name": "accompany_id",
+            "in": "path",
+            "description": "동행글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "댓글 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "답글 내용",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertReplyRequest"
+              },
+              "example": {
+                "content": "답글입니다."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "답글 쓰기 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/type": {
       "patch": {
         "tags": [
@@ -524,10 +1649,570 @@
           }
         }
       }
+    },
+    "/reviews/staff": {
+      "get": {
+        "tags": [
+          "REVIEW"
+        ],
+        "summary": "내가쓴 리뷰 조회",
+        "operationId": "getAllReviewFromMe",
+        "parameters": [
+          {
+            "name": "cursorId",
+            "in": "query",
+            "description": "마지막 커서 id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "가져올 객체 개수",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "reviewType",
+            "in": "query",
+            "description": "정렬기준",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "유저객체"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "리뷰 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "allReviewInfoDTOS": [
+                      {
+                        "reviewId": 5,
+                        "rating": 5,
+                        "title": "결 게스트하우스",
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
+                        ],
+                        "review": "음.... 전 잘 모르겠네요",
+                        "disclosure": true,
+                        "reviewComment": "만족스럽지 못하셨다면 죄송합니다! 더 발전하는 게스트하우스가 되도록 하겠습니다",
+                        "reviewDate": "2025-01-19T05:16:11",
+                        "reviewCommentDate": "2025-05-19T05:16:39",
+                        "nickName": "테스트유저(abc123)"
+                      }
+                    ],
+                    "hasNext": false
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "잘못된 경로",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "REVIEW_NOT_FOUND",
+                  "message": "잘못된 경로로 보낸 요청입니다."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/host": {
+      "get": {
+        "tags": [
+          "REVIEW"
+        ],
+        "summary": "게스트하우스의 모든 리뷰 조회",
+        "operationId": "getAllReviewOfMyGuestHouse",
+        "parameters": [
+          {
+            "name": "cursorId",
+            "in": "query",
+            "description": "마지막 커서 id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "가져올 객체 개수",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "reviewType",
+            "in": "query",
+            "description": "정렬기준",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "유저객체"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "리뷰 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "allReviewInfoDTOS": [
+                      {
+                        "reviewId": 5,
+                        "rating": 5,
+                        "title": "결 게스트하우스",
+                        "nickName": "테스트유저(abc123)",
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
+                        ],
+                        "review": "음.... 전 잘 모르겠네요",
+                        "disclosure": true,
+                        "reviewComment": "만족스럽지 못하셨다면 죄송합니다! 더 발전하는 게스트하우스가 되도록 하겠습니다",
+                        "reviewDate": "2025-01-19T05:16:11",
+                        "reviewCommentDate": "2025-05-19T05:16:39",
+                        "hostNickName": "테스트유저(abc123)"
+                      }
+                    ],
+                    "hasNext": false,
+                    "countReview": 2,
+                    "averageRating": 4.5
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "잘못된 경로",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "REVIEW_NOT_FOUND",
+                  "message": "잘못된 경로로 보낸 요청입니다."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accompanies/my": {
+      "get": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "내가 쓴 동행글 모두 조회",
+        "operationId": "getMyAccompany",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "마지막으로 조회한 동행글 ID",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 크기 (기본값: 20)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "내가 쓴 동행글 모두 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccompaniesResponse"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "accompanies": [
+                      {
+                        "id": 4,
+                        "title": "동행구합니다",
+                        "content": "2박 3일이요~",
+                        "createdAt": 1747837797,
+                        "updatedAt": 1747837797,
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/6883a7f3-37ae-4e8b-a5dd-b5586c71d114",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/dc472501-185c-438e-938c-a630a9c7a75b",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/7509e022-f973-4986-9e43-ff8b3907216d"
+                        ],
+                        "userId": 3,
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/fbdfe821-122f-4f2d-b8a0-f464a0d97fb5",
+                        "userNickname": "나는스태프고주희",
+                        "like": true,
+                        "likeCount": 2,
+                        "commentCount": 3
+                      }
+                    ],
+                    "cursor": 4,
+                    "hasNext": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accompanies/like": {
+      "get": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "좋아요 한 동행글 모두 조회",
+        "operationId": "getAccompanyILike",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "마지막으로 조회한 동행글 ID",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 크기 (기본값: 20)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "좋아요 한 동행글 모두 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "accompanies": [
+                      {
+                        "id": 5,
+                        "title": "아저씨 이 버스 강남역 가나요",
+                        "content": "타세요~",
+                        "createdAt": 1747837837,
+                        "updatedAt": 1747837837,
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/64361c67-82e4-4baf-8245-7ce4bfb63ee4",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/0e278248-af48-4a91-ab25-26f12b7f4bb8",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/740352bc-f4c9-430e-a00d-1c406d87832a"
+                        ],
+                        "userId": 2,
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
+                        "userNickname": "훈식",
+                        "like": false,
+                        "likeCount": 5,
+                        "commentCount": 1
+                      },
+                      {
+                        "id": 4,
+                        "title": "동행구합니다",
+                        "content": "2박 3일이요~",
+                        "createdAt": 1747837797,
+                        "updatedAt": 1747837797,
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/6883a7f3-37ae-4e8b-a5dd-b5586c71d114",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/dc472501-185c-438e-938c-a630a9c7a75b",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/7509e022-f973-4986-9e43-ff8b3907216d"
+                        ],
+                        "userId": 3,
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/fbdfe821-122f-4f2d-b8a0-f464a0d97fb5",
+                        "userNickname": "나는스태프고주희",
+                        "like": true,
+                        "likeCount": 2,
+                        "commentCount": 3
+                      }
+                    ],
+                    "cursor": 3,
+                    "hasNext": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accompanies/comment-reply": {
+      "get": {
+        "tags": [
+          "ACCOMPANY"
+        ],
+        "summary": "내가 댓글/답글 단 동행글 모두 조회",
+        "operationId": "getAccompanyICommentOrReply",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "마지막으로 조회한 동행글 ID",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "페이지 크기 (기본값: 20)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "내가 댓글/답글 단 동행글 모두 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAccompaniesResponse"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "accompanies": [
+                      {
+                        "id": 5,
+                        "title": "아저씨 이 버스 강남역 가나요",
+                        "content": "타세요~",
+                        "createdAt": 1747837837,
+                        "updatedAt": 1747837837,
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/64361c67-82e4-4baf-8245-7ce4bfb63ee4",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/0e278248-af48-4a91-ab25-26f12b7f4bb8",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/740352bc-f4c9-430e-a00d-1c406d87832a"
+                        ],
+                        "userId": 2,
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
+                        "userNickname": "훈식",
+                        "like": false,
+                        "likeCount": 5,
+                        "commentCount": 1
+                      },
+                      {
+                        "id": 4,
+                        "title": "동행구합니다",
+                        "content": "2박 3일이요~",
+                        "createdAt": 1747837797,
+                        "updatedAt": 1747837797,
+                        "images": [
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/6883a7f3-37ae-4e8b-a5dd-b5586c71d114",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/dc472501-185c-438e-938c-a630a9c7a75b",
+                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/7509e022-f973-4986-9e43-ff8b3907216d"
+                        ],
+                        "userId": 3,
+                        "userImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/fbdfe821-122f-4f2d-b8a0-f464a0d97fb5",
+                        "userNickname": "나는스태프고주희",
+                        "like": true,
+                        "likeCount": 2,
+                        "commentCount": 3
+                      }
+                    ],
+                    "cursor": 3,
+                    "hasNext": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{reviewId}": {
+      "delete": {
+        "tags": [
+          "REVIEW"
+        ],
+        "summary": "리뷰 삭제",
+        "operationId": "deleteReview",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "description": "리뷰 id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "리뷰 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/comments/{reviewCommentId}": {
+      "delete": {
+        "tags": [
+          "REVIEW_COMMENTS"
+        ],
+        "summary": "리뷰 댓글 삭제",
+        "operationId": "deleteReviewComment",
+        "parameters": [
+          {
+            "name": "reviewCommentId",
+            "in": "path",
+            "description": "리뷰 댓글 id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "리뷰 댓글 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "댓글이 존재하지 않음 ",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "INTERNAL_SERVER_ERROR",
+                  "message": "댓글이 존재하지 않습니다."
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "EditAccompanyRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "제목",
+            "maxLength": 40,
+            "minLength": 2
+          },
+          "content": {
+            "type": "string",
+            "description": "내용",
+            "maxLength": 10000,
+            "minLength": 1
+          },
+          "images": {
+            "type": "array",
+            "description": "기존 imageUrl과 새로운 MultipartFile 파일명의 문자열 (이미지 순서도 수정됨)",
+            "items": {
+              "type": "string"
+            }
+          },
+          "newImages": {
+            "type": "array",
+            "description": "새로운 이미지",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        },
+        "required": [
+          "content",
+          "title"
+        ]
+      },
+      "UpsertCommentRequest": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "내용",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "UpsertReplyRequest": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "내용",
+            "maxLength": 2000,
+            "minLength": 1
+          }
+        }
+      },
       "SignUpRequest": {
         "type": "object",
         "properties": {
@@ -606,6 +2291,40 @@
           "businessRegistrationCertificate"
         ]
       },
+      "CreateReviewDTO": {
+        "type": "object",
+        "properties": {
+          "rating": {
+            "type": "number",
+            "format": "double"
+          },
+          "review": {
+            "type": "string"
+          },
+          "disclosure": {
+            "type": "boolean"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "employmentId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "CreateReviewCommnetDTO": {
+        "type": "object",
+        "properties": {
+          "reviewComment": {
+            "type": "string"
+          }
+        }
+      },
       "NaverAuthenticationRequest": {
         "type": "object",
         "properties": {
@@ -661,6 +2380,100 @@
           "authority",
           "pid"
         ]
+      },
+      "EmploymentDTO": {
+        "type": "object",
+        "properties": {
+          "instarUrl": {
+            "type": "string"
+          },
+          "personNum": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "staredAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "recruitmentEnd": {
+            "type": "string",
+            "format": "date"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "hashtagName": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "benefitsContent": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "precautions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrecautionDTO"
+            }
+          }
+        }
+      },
+      "PrecautionDTO": {
+        "type": "object",
+        "properties": {
+          "precautionsTitle": {
+            "type": "string"
+          },
+          "precautionsContent": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponseString": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          }
+        }
       },
       "CreateApplicantRequest": {
         "type": "object",
@@ -733,6 +2546,224 @@
           "onboarded": {
             "type": "boolean",
             "description": "온보딩 여부"
+          }
+        }
+      },
+      "ApiResponseVoid": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "AccompanyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "동행글 ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "제목"
+          },
+          "content": {
+            "type": "string",
+            "description": "내용"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "작성시간 (unix 시간)"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "수정시간 (unix 시간)"
+          },
+          "images": {
+            "type": "array",
+            "description": "첨부 이미지",
+            "items": {
+              "type": "string"
+            }
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "작성자 ID"
+          },
+          "userImage": {
+            "type": "string",
+            "description": "작성자 프로필 이미지"
+          },
+          "userNickname": {
+            "type": "string",
+            "description": "작성자 닉네임"
+          },
+          "like": {
+            "type": "boolean",
+            "description": "요청 유저의 좋아요 여부"
+          },
+          "likeCount": {
+            "type": "integer",
+            "format": "int64",
+            "description": "좋아요 수"
+          },
+          "commentCount": {
+            "type": "integer",
+            "format": "int64",
+            "description": "댓글 수"
+          }
+        }
+      },
+      "GetAccompaniesResponse": {
+        "type": "object",
+        "properties": {
+          "accompanies": {
+            "type": "array",
+            "description": "동행글 array",
+            "items": {
+              "$ref": "#/components/schemas/AccompanyDto"
+            }
+          },
+          "cursor": {
+            "type": "integer",
+            "format": "int64",
+            "description": "커서 (현재까지 조회한 마지막 동행글 ID)"
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "다음 동행글 존재 여부"
+          }
+        }
+      },
+      "CommentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "댓글 ID"
+          },
+          "content": {
+            "type": "string",
+            "description": "내용"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "작성 시간 (unix 시간)"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "수정 시간 (unix 시간)"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "작성자 ID"
+          },
+          "userNickname": {
+            "type": "string",
+            "description": "작성자 닉네임"
+          },
+          "userImage": {
+            "type": "string",
+            "description": "작성자 프로필 이미지"
+          },
+          "replyCount": {
+            "type": "integer",
+            "format": "int64",
+            "description": "답글 수"
+          }
+        }
+      },
+      "GetCommentsResponse": {
+        "type": "object",
+        "properties": {
+          "comments": {
+            "type": "array",
+            "description": "댓글 array",
+            "items": {
+              "$ref": "#/components/schemas/CommentDto"
+            }
+          },
+          "cursor": {
+            "type": "integer",
+            "format": "int64",
+            "description": "커서 (현재까지 조회한 마지막 댓글 ID)"
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "다음 댓글 존재 여부"
+          }
+        }
+      },
+      "GetRepliesResponse": {
+        "type": "object",
+        "properties": {
+          "replies": {
+            "type": "array",
+            "description": "답글 array",
+            "items": {
+              "$ref": "#/components/schemas/ReplyDto"
+            }
+          },
+          "cursor": {
+            "type": "integer",
+            "format": "int64",
+            "description": "커서 (현재까지 조회한 마지막 답글 ID)"
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "다음 답글 존재 여부"
+          }
+        }
+      },
+      "ReplyDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "답글 ID"
+          },
+          "content": {
+            "type": "string",
+            "description": "내용"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "작성 시간 (unix 시간)"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64",
+            "description": "수정 시간 (unix 시간)"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "작성자 ID"
+          },
+          "userNickname": {
+            "type": "string",
+            "description": "작성자 닉네임"
+          },
+          "userImage": {
+            "type": "string",
+            "description": "작성자 프로필 이미지"
           }
         }
       }

@@ -21,6 +21,10 @@
       "description": "동행 구하기 댓글"
     },
     {
+      "name": "EMPLOYMENT",
+      "description": "공고"
+    },
+    {
       "name": "AUTH",
       "description": "로그인"
     },
@@ -42,6 +46,402 @@
     }
   ],
   "paths": {
+    "/users": {
+      "put": {
+        "tags": [
+          "USER"
+        ],
+        "summary": "개인정보수정",
+        "operationId": "updateUser",
+        "requestBody": {
+          "description": "개인정보수정",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequest"
+              },
+              "example": "nickname: 미밍\nphone: 01088454426\nphoneVerificationCode: 000000\nimage: (FILE) 이미지 파일\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "개인정보수정 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "USER"
+        ],
+        "summary": "회원가입",
+        "operationId": "signup",
+        "requestBody": {
+          "description": "등록할 사용자 정보",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpRequest"
+              },
+              "example": "nickname: 미밍\nphone: 01088454426\nphoneVerificationCode: 000000\nbirthDate: 20000224\nimage: (FILE) 이미지 파일\nagreements: 올래스텝 이용약관_2025-04-09_v1\nagreements: 개인정보처리방침_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-필수_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-마케팅_2025-04-09_v1\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "회원가입 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employments": {
+      "get": {
+        "tags": [
+          "EMPLOYMENT"
+        ],
+        "summary": "내 공고 필터링 조회",
+        "operationId": "getMyEmployment",
+        "parameters": [
+          {
+            "name": "cursorId",
+            "in": "query",
+            "description": "커서 id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 사이즈",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "타입 ( 전체, 진행중인공고, 마감공고 )",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ALL",
+                "IN_PROGRESS",
+                "END"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "공고 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "employmentPreviewDTOS": [
+                      {
+                        "employmentId": 3,
+                        "image": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ab34ab2e-8469-47a8-97b2-a6722e22b104",
+                        "hashtagName": [
+                          "#아오",
+                          "#힘들어요"
+                        ],
+                        "title": "결 게하",
+                        "sex": "female",
+                        "recruitmentEnd": "2025-05-15",
+                        "content": "스텝업무",
+                        "latitude": 37.5,
+                        "longitude": 126.9
+                      }
+                    ],
+                    "cursor": 3,
+                    "hasNext": true
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "잘못된 경로",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "REVIEW_NOT_FOUND",
+                  "message": "잘못된 경로로 보낸 요청입니다."
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "EMPLOYMENT"
+        ],
+        "summary": "공고 수정",
+        "operationId": "putEmploymentById",
+        "parameters": [
+          {
+            "name": "employmentDTO",
+            "in": "query",
+            "description": "공고 데이터 받아올 객체",
+            "content": {
+              "application/json": {}
+            }
+          },
+          {
+            "name": "images",
+            "in": "query",
+            "description": "이미지",
+            "content": {
+              "multipart/form-data": {}
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "공고글 수정 내용",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/EmploymentDTO"
+              },
+              "example": " {\n  \"employment\": {\n    \"employmentId: 1,\n    \"instarUrl\": \"이미지 파일1, 이미지파일2\",\n    \"personNum\": 01088454426,\n    \"sex\": \"여\",\n    \"staredAt\": \"2025-05-23\",\n    \"endedAt\": \"2025-05-23\",\n    \"recruitmentEnd\": \"2025-05-23\",\n    \"title\": \"맥스네 게하\",\n    \"content\": \"맥스네 게하 스텝 구합니당~\",\n    \"category\": \"LARGE\",\n    \"latitude\": 0.1,\n    \"longitude\": 0.1,\n    \"hashtagName\": [\n      \"string\"\n    ],\n    \"benefitsContent\": [\n      \"복리후생1\",\n      \"복리후생2\"\n    ],\n    \"precautions\": [\n      {\n        \"precautionsTitle\": \"일과 재미, 균형 잡기!\",\n        \"precautionsContent\": \"즐길 때는 확실히! 하지만 업무 시간엔 프로페셔널하게 행동해 주세요.\"\n      }\n    ]\n  },\n  \"images\": [\n    \"MultiPart 파일1\",\n     \"MultiPart 파일1\"\n  ]\n}\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "공고글 수정 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "EMPLOYMENT"
+        ],
+        "summary": "공고글 작성",
+        "operationId": "uploadEmployment",
+        "parameters": [
+          {
+            "name": "employmentDTO",
+            "in": "query",
+            "description": "공고글 받아올 객체 ( json 으로 타입 명시필요 ) ",
+            "content": {
+              "multipart/form-data": {}
+            }
+          },
+          {
+            "name": "images",
+            "in": "query",
+            "description": "이미지",
+            "content": {
+              "multipart/form-data": {}
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "공고글 작성 내용",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/EmploymentDTO"
+              },
+              "example": "{\n  \"employment\": {\n    \"instarUrl\": \"이미지 파일1, 이미지파일2\",\n    \"personNum\": 01088454426,\n    \"sex\": \"여\",\n    \"staredAt\": \"2025-05-23\",\n    \"endedAt\": \"2025-05-23\",\n    \"recruitmentEnd\": \"2025-05-23\",\n    \"title\": \"맥스네 게하\",\n    \"content\": \"맥스네 게하 스텝 구합니당~\",\n    \"category\": \"LARGE\",\n    \"latitude\": 0.1,\n    \"longitude\": 0.1,\n    \"hashtagName\": [\n      \"string\"\n    ],\n    \"benefitsContent\": [\n      \"복리후생1\",\n      \"복리후생2\"\n    ],\n    \"precautions\": [\n      {\n        \"precautionsTitle\": \"일과 재미, 균형 잡기!\",\n        \"precautionsContent\": \"즐길 때는 확실히! 하지만 업무 시간엔 프로페셔널하게 행동해 주세요.\"\n      }\n    ]\n  },\n  \"images\": [\n    \"MultiPart 파일1\",\n     \"MultiPart 파일1\"\n  ]\n}\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "공고글 작성 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "EMPLOYMENT"
+        ],
+        "summary": "답글 삭제",
+        "operationId": "deleteEmployment",
+        "requestBody": {
+          "description": "삭제할 답글 ID 목록",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "Long",
+                  "format": "int64"
+                }
+              },
+              "example": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "답글 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applicants/my": {
+      "get": {
+        "tags": [
+          "APPLICANT"
+        ],
+        "summary": "내 지원서 조회",
+        "operationId": "getMyApplicant",
+        "responses": {
+          "200": {
+            "description": "지원서 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "userId": "1",
+                    "nickname": "hoon",
+                    "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/bd0b323b-8463-4102-99e5-ec795e266009",
+                    "mbti": "ISFP",
+                    "link": "https://github.com/hoon-hoon",
+                    "introduction": "자기소개 입니다.",
+                    "motivation": "어필 사항 입니다.",
+                    "appeal": "없음",
+                    "images": [
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "지원서 조회 권한 없음",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "NO_PERMISSION_TO_VIEW",
+                  "message": "지원서 조회 권한 없음"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "지원서 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "APPLICANT_NOT_FOUND",
+                  "message": "지원서 찾을 수 없음"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "APPLICANT"
+        ],
+        "summary": "지원서 수정",
+        "operationId": "editApplicant",
+        "requestBody": {
+          "description": "지원서 수정 내용",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/EditApplicantRequest"
+              },
+              "example": "profileImage: (FILE) 이미지 파일\nmbti: ISFP\nlink: https://github.com/hoon-hoon\nintroduction: 자기소개 입니다.\nmotivation: 지원 동기 입니다.\nappeal: 어필 사항 입니다.\nimages: https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/f7c0d527-744e-48a3-bda6-e90415ae7eca\nimages: 4.JPG (newImages에 들어가는 파일명 그대로)\nimages: https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/91d15912-cc75-4544-95c4-f2920836d612\nnewImages: (FILE) 4.JPG\n"
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "지원서 수정 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "APPLICANT"
+        ],
+        "summary": "지원서 삭제",
+        "operationId": "deleteApplicant",
+        "responses": {
+          "200": {
+            "description": "지원서 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/accompanies/{accompany_id}": {
       "get": {
         "tags": [
@@ -386,39 +786,6 @@
         }
       }
     },
-    "/users": {
-      "post": {
-        "tags": [
-          "USER"
-        ],
-        "summary": "회원가입",
-        "operationId": "signup",
-        "requestBody": {
-          "description": "등록할 사용자 정보",
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/SignUpRequest"
-              },
-              "example": "nickname: 미밍\nphone: 01088454426\nphoneVerificationCode: 000000\nbirthDate: 20000224\nimage: (FILE) 이미지 파일\nagreements: 올래스텝 이용약관_2025-04-09_v1\nagreements: 개인정보처리방침_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-필수_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-마케팅_2025-04-09_v1\n"
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "회원가입 성공",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "SUCCESS"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/users/phone/verification-requests": {
       "post": {
         "tags": [
@@ -522,7 +889,7 @@
         "tags": [
           "REVIEW"
         ],
-        "summary": "내가쓴 리뷰 조회",
+        "summary": "게스트 하우스 별 리뷰 조회",
         "operationId": "getAllReviewOfGuestHouse",
         "parameters": [
           {
@@ -558,7 +925,7 @@
           {
             "name": "reviewType",
             "in": "query",
-            "description": "정렬기준",
+            "description": "정렬기준 ( 전체, 인기순 중 하나 선택)",
             "required": true,
             "schema": {
               "type": "string"
@@ -575,24 +942,20 @@
                   "data": {
                     "allReviewInfoDTOS": [
                       {
-                        "reviewId": 5,
-                        "rating": 5,
-                        "title": "결 게스트하우스",
-                        "images": [
-                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
-                          "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
-                        ],
-                        "review": "음.... 전 잘 모르겠네요",
-                        "disclosure": true,
-                        "reviewComment": "만족스럽지 못하셨다면 죄송합니다! 더 발전하는 게스트하우스가 되도록 하겠습니다",
-                        "reviewDate": "2025-01-19T05:16:11",
-                        "reviewCommentDate": "2025-05-19T05:16:39",
-                        "hostNickName": "테스트유저(abc123)"
+                        "reviewId": 1,
+                        "rating": "2 (별점)",
+                        "title": "결 게하",
+                        "nickName": "테스트유저(abc123)(리뷰쓴사람 닉네임)",
+                        "images": [],
+                        "review": "힘들어요",
+                        "disclosure": "true (공개)",
+                        "reviewDate": "2025-05-27T02:24:43",
+                        "hostNickName": "null(공고 작성자 닉네임)"
                       }
                     ],
                     "hasNext": false,
-                    "countReview": 2,
-                    "averageRating": 4.5
+                    "countReview": 1,
+                    "averageRating": 2
                   }
                 }
               }
@@ -618,7 +981,7 @@
         "summary": "리뷰작성",
         "operationId": "uploadReview",
         "requestBody": {
-          "description": "곻고에 대한 리뷰 작성",
+          "description": "공고에 대한 리뷰 작성",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -922,79 +1285,32 @@
         }
       }
     },
-    "/employments": {
-      "get": {
-        "tags": [
-          "employment-controller"
-        ],
-        "operationId": "getEmploymentById",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "employmentId": {
-                    "type": "integer",
-                    "format": "int64"
-                  }
-                },
-                "required": [
-                  "employmentId"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseVoid"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/employments/post-heart": {
       "post": {
         "tags": [
-          "employment-controller"
+          "EMPLOYMENT"
         ],
-        "operationId": "uploadEmployment",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "employment": {
-                    "$ref": "#/components/schemas/EmploymentDTO"
-                  },
-                  "images": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  }
-                },
-                "required": [
-                  "employment"
-                ]
-              }
+        "summary": "공고 좋아요",
+        "operationId": "postHeartByEmployment",
+        "parameters": [
+          {
+            "name": "employmentId",
+            "in": "query",
+            "description": "공고 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "공고 좋아요 성공",
             "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseString"
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
                 }
               }
             }
@@ -1003,61 +1319,6 @@
       }
     },
     "/applicants": {
-      "get": {
-        "tags": [
-          "APPLICANT"
-        ],
-        "summary": "내 지원서 조회",
-        "operationId": "getMyApplicant",
-        "responses": {
-          "200": {
-            "description": "지원서 조회 성공",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "SUCCESS",
-                  "data": {
-                    "userId": "1",
-                    "nickname": "hoon",
-                    "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/bd0b323b-8463-4102-99e5-ec795e266009",
-                    "mbti": "ISFP",
-                    "link": "https://github.com/hoon-hoon",
-                    "introduction": "자기소개 입니다.",
-                    "motivation": "어필 사항 입니다.",
-                    "appeal": "없음",
-                    "images": [
-                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
-                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "지원서 조회 권한 없음",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "NO_PERMISSION_TO_VIEW",
-                  "message": "지원서 조회 권한 없음"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "지원서 찾을 수 없음",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "APPLICANT_NOT_FOUND",
-                  "message": "지원서 찾을 수 없음"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "APPLICANT"
@@ -1071,7 +1332,7 @@
               "schema": {
                 "$ref": "#/components/schemas/CreateApplicantRequest"
               },
-              "example": "profileImage: (FILE) 이미지 파일\nnickname: hoon\nmbti: ISFP\nlink: https://github.com/hoon-hoon\nintroduction: 자기소개 입니다.\nmotivation: 지원 동기 입니다.\nappeal: 어필 사항 입니다.\nimages: (FILE) 이미지 파일1\nimages: (FILE) 이미지 파일2..\n"
+              "example": "profileImage: (FILE) 이미지 파일\nmbti: ISFP\nlink: https://github.com/hoon-hoon\nintroduction: 자기소개 입니다.\nmotivation: 지원 동기 입니다.\nappeal: 어필 사항 입니다.\nimages: (FILE) 이미지 파일1\nimages: (FILE) 이미지 파일2..\n"
             }
           },
           "required": true
@@ -1094,25 +1355,6 @@
                 "example": {
                   "status": "APPLICANT_DUPLICATED",
                   "message": "이미 지원서가 있습니다."
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "APPLICANT"
-        ],
-        "summary": "지원서 삭제",
-        "operationId": "deleteApplicant",
-        "responses": {
-          "200": {
-            "description": "지원서 삭제 성공",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "SUCCESS"
                 }
               }
             }
@@ -1231,7 +1473,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EditAccompanyRequest"
+                "$ref": "#/components/schemas/UploadAccompanyRequest"
               },
               "example": "title: 동행구합니다\ncontent: 2박 3일이요~\nimages: (FILE) 1.JPG\nimages: (FILE) 2.JPG\nimages: (FILE) 3.JPG\n"
             }
@@ -1640,6 +1882,7 @@
                   "status": "SUCCESS",
                   "data": {
                     "nickname": "미밍",
+                    "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
                     "type": "STAFF",
                     "onboarded": true
                   }
@@ -1681,7 +1924,7 @@
           {
             "name": "reviewType",
             "in": "query",
-            "description": "정렬기준",
+            "description": "정렬기준 (1주일, 1개월, 3개월, 6개월)",
             "required": true,
             "schema": {
               "type": "string"
@@ -1810,6 +2053,188 @@
                     "hasNext": false,
                     "countReview": 2,
                     "averageRating": 4.5
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "잘못된 경로",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "REVIEW_NOT_FOUND",
+                  "message": "잘못된 경로로 보낸 요청입니다."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employments/{employmentId}": {
+      "get": {
+        "tags": [
+          "EMPLOYMENT"
+        ],
+        "summary": "하나의 공고 상세정보 조회",
+        "operationId": "getEmploymentById",
+        "parameters": [
+          {
+            "name": "employmentId",
+            "in": "path",
+            "description": "공고 id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "공고 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "employmentId": 1,
+                    "images": [
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/5f855ce2-6c08-4a9d-ada9-91cf6348f329",
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/38be126a-00fa-475a-8824-e47a004813e0"
+                    ],
+                    "hashtagName": [
+                      "#아오",
+                      "#힘들어요"
+                    ],
+                    "title": "결 게하",
+                    "instarUrl": "https://insta.com/example",
+                    "personNum": 3,
+                    "sex": "female",
+                    "endedAt": "2025-05-20",
+                    "recruitmentEnd": "2025-05-15",
+                    "content": "스텝업무",
+                    "latitude": 37.5,
+                    "longitude": 126.9,
+                    "benefitsContent": [
+                      "점심 제공",
+                      "정시 퇴근"
+                    ],
+                    "phoneNum": "01012345678"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "잘못된 경로",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "REVIEW_NOT_FOUND",
+                  "message": "잘못된 경로로 보낸 요청입니다."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employments/all": {
+      "get": {
+        "tags": [
+          "EMPLOYMENT"
+        ],
+        "summary": "공고 필터링 조회",
+        "operationId": "getAllEmployment",
+        "parameters": [
+          {
+            "name": "cursorId",
+            "in": "query",
+            "description": "커서 id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 사이즈",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "타입 ( 전체, 진행중인공고, 마감공고 )",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ALL",
+                "IN_PROGRESS",
+                "END"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "카테고리 ( 대규모, 소규모 ,뷰맛집, 힐링, 체험 )",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LARGE",
+                "SMALL",
+                "VIEW",
+                "HEALING",
+                "EXPERIENCE"
+              ]
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "검색내용",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "공고 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "employmentPreviewDTOS": [
+                      {
+                        "employmentId": 3,
+                        "image": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ab34ab2e-8469-47a8-97b2-a6722e22b104",
+                        "hashtagName": [
+                          "#아오",
+                          "#힘들어요"
+                        ],
+                        "title": "결 게하",
+                        "sex": "female",
+                        "recruitmentEnd": "2025-05-15",
+                        "content": "스텝업무",
+                        "latitude": 37.5,
+                        "longitude": 126.9
+                      }
+                    ],
+                    "cursor": 3,
+                    "hasNext": true
                   }
                 }
               }
@@ -2148,10 +2573,220 @@
           }
         }
       }
+    },
+    "/employments/delete-heart": {
+      "delete": {
+        "tags": [
+          "EMPLOYMENT"
+        ],
+        "summary": "공고 좋아요 취소",
+        "operationId": "deleteHeartByEmployment",
+        "parameters": [
+          {
+            "name": "employmentId",
+            "in": "query",
+            "description": "공고 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "공고 좋아요 취소 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "UpdateUserRequest": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "description": "닉네임 (2~8자)",
+            "maxLength": 8,
+            "minLength": 2
+          },
+          "phone": {
+            "type": "string",
+            "description": "전화번호 (- 없이 숫자만)",
+            "pattern": "^(01[016789])\\d{7,8}$"
+          },
+          "phoneVerificationCode": {
+            "type": "string",
+            "description": "전화번호 인증 코드 (6자리 숫자)",
+            "pattern": "\\d{6}"
+          },
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "description": "이미지 파일 (최대 1개, 10MB 이하)"
+          }
+        }
+      },
+      "EmploymentDTO": {
+        "type": "object",
+        "properties": {
+          "employmentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "instarUrl": {
+            "type": "string"
+          },
+          "personNum": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sex": {
+            "type": "string",
+            "description": "Male/Female/All"
+          },
+          "staredAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "recruitmentEnd": {
+            "type": "string",
+            "format": "date"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "LARGE",
+              "SMALL",
+              "VIEW",
+              "HEALING",
+              "EXPERIENCE"
+            ]
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "hashtagName": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "benefitsContent": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "precautions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrecautionDTO"
+            }
+          }
+        }
+      },
+      "PrecautionDTO": {
+        "type": "object",
+        "properties": {
+          "precautionsTitle": {
+            "type": "string"
+          },
+          "precautionsContent": {
+            "type": "string"
+          }
+        }
+      },
+      "EditApplicantRequest": {
+        "type": "object",
+        "properties": {
+          "newProfileImage": {
+            "type": "string",
+            "format": "binary",
+            "description": "프로필 이미지 (안 보내면 기존 유지)"
+          },
+          "mbti": {
+            "type": "string",
+            "description": "MBTI",
+            "maxLength": 10000,
+            "minLength": 0
+          },
+          "link": {
+            "type": "string",
+            "description": "링크 첨부",
+            "maxLength": 10000,
+            "minLength": 0
+          },
+          "introduction": {
+            "type": "string",
+            "description": "자기소개 작성",
+            "maxLength": 10000,
+            "minLength": 0
+          },
+          "motivation": {
+            "type": "string",
+            "description": "지원 동기 작성",
+            "maxLength": 10000,
+            "minLength": 0
+          },
+          "appeal": {
+            "type": "string",
+            "description": "어필 사항",
+            "maxLength": 10000,
+            "minLength": 0
+          },
+          "images": {
+            "type": "array",
+            "description": "기존 imageUrl과 새로운 MultipartFile 파일명의 문자열 (이미지 순서도 수정됨)",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 6,
+            "minItems": 0
+          },
+          "newImages": {
+            "type": "array",
+            "description": "새로운 이미지",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "maxItems": 6,
+            "minItems": 0
+          }
+        }
+      },
       "EditAccompanyRequest": {
         "type": "object",
         "properties": {
@@ -2381,100 +3016,6 @@
           "pid"
         ]
       },
-      "EmploymentDTO": {
-        "type": "object",
-        "properties": {
-          "instarUrl": {
-            "type": "string"
-          },
-          "personNum": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "sex": {
-            "type": "string"
-          },
-          "staredAt": {
-            "type": "string",
-            "format": "date"
-          },
-          "endedAt": {
-            "type": "string",
-            "format": "date"
-          },
-          "recruitmentEnd": {
-            "type": "string",
-            "format": "date"
-          },
-          "title": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "category": {
-            "type": "string"
-          },
-          "latitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "longitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "hashtagName": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "benefitsContent": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "images": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "binary"
-            }
-          },
-          "precautions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PrecautionDTO"
-            }
-          }
-        }
-      },
-      "PrecautionDTO": {
-        "type": "object",
-        "properties": {
-          "precautionsTitle": {
-            "type": "string"
-          },
-          "precautionsContent": {
-            "type": "string"
-          }
-        }
-      },
-      "ApiResponseString": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
-            "type": "string"
-          }
-        }
-      },
       "CreateApplicantRequest": {
         "type": "object",
         "properties": {
@@ -2513,6 +3054,35 @@
           }
         }
       },
+      "UploadAccompanyRequest": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "제목",
+            "maxLength": 40,
+            "minLength": 2
+          },
+          "content": {
+            "type": "string",
+            "description": "내용",
+            "maxLength": 10000,
+            "minLength": 1
+          },
+          "images": {
+            "type": "array",
+            "description": "이미지",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        },
+        "required": [
+          "content",
+          "title"
+        ]
+      },
       "ChangeTypeRequest": {
         "type": "object",
         "properties": {
@@ -2533,6 +3103,9 @@
           "nickname": {
             "type": "string"
           },
+          "profileImage": {
+            "type": "string"
+          },
           "type": {
             "type": "string",
             "description": "UNDECIDED: 스텝/게스트하우스 선택 필요한 상태 (회원가입 직후), ADMIN: 미구현",
@@ -2546,20 +3119,6 @@
           "onboarded": {
             "type": "boolean",
             "description": "온보딩 여부"
-          }
-        }
-      },
-      "ApiResponseVoid": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
-            "type": "object"
           }
         }
       },

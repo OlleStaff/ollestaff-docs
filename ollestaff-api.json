@@ -516,7 +516,7 @@
         "requestBody": {
           "description": "동행글 수정 내용",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/EditAccompanyRequest"
               },
@@ -1471,7 +1471,7 @@
         "requestBody": {
           "description": "동행글 작성 내용",
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/UploadAccompanyRequest"
               },

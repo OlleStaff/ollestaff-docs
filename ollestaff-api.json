@@ -158,6 +158,9 @@
             "description": "공고 목록 조회 성공",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmploymentPreviewDTO"
+                },
                 "example": {
                   "status": "SUCCESS",
                   "data": {
@@ -937,6 +940,9 @@
             "description": "리뷰 조회 성공",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllReviewInfoDTO"
+                },
                 "example": {
                   "status": "SUCCESS",
                   "data": {
@@ -1941,6 +1947,9 @@
             "description": "리뷰 조회 성공",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllReviewInfoDTO"
+                },
                 "example": {
                   "status": "SUCCESS",
                   "data": {
@@ -2029,6 +2038,9 @@
             "description": "리뷰 조회 성공",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllReviewDTO"
+                },
                 "example": {
                   "status": "SUCCESS",
                   "data": {
@@ -2096,6 +2108,9 @@
             "description": "공고 조회 성공",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmploymentInfoDTO"
+                },
                 "example": {
                   "status": "SUCCESS",
                   "data": {
@@ -2215,6 +2230,9 @@
             "description": "공고 목록 조회 성공",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmploymentPreviewDTO"
+                },
                 "example": {
                   "status": "SUCCESS",
                   "data": {
@@ -3123,6 +3141,185 @@
           "onboarded": {
             "type": "boolean",
             "description": "온보딩 여부"
+          }
+        }
+      },
+      "AllReviewInfoDTO": {
+        "type": "object",
+        "properties": {
+          "reviewId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rating": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": {
+            "type": "string"
+          },
+          "nickName": {
+            "type": "string"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "review": {
+            "type": "string"
+          },
+          "disclosure": {
+            "type": "boolean"
+          },
+          "reviewComment": {
+            "type": "string"
+          },
+          "reviewDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "reviewCommentDate": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "hostNickName": {
+            "type": "string"
+          }
+        }
+      },
+      "AllReviewDTO": {
+        "type": "object",
+        "properties": {
+          "allReviewInfoDTOS": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AllReviewInfoDTO"
+            }
+          },
+          "cursorId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "countReview": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "averageRating": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "EmploymentPreviewDTO": {
+        "type": "object",
+        "properties": {
+          "employmentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "image": {
+            "type": "string"
+          },
+          "hashtagName": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "recruitmentEnd": {
+            "type": "string",
+            "format": "date"
+          },
+          "content": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "EmploymentInfoDTO": {
+        "type": "object",
+        "properties": {
+          "employmentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hashtagName": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "instarUrl": {
+            "type": "string"
+          },
+          "personNum": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "recruitmentEnd": {
+            "type": "string",
+            "format": "date"
+          },
+          "content": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "benefitsContent": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "phoneNum": {
+            "type": "string"
+          },
+          "locationName": {
+            "type": "string"
           }
         }
       },

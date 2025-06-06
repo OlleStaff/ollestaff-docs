@@ -60,7 +60,7 @@
               "schema": {
                 "$ref": "#/components/schemas/UpdateUserRequest"
               },
-              "example": "nickname: 미밍\nphone: 01088454426\nphoneVerificationCode: 000000\nimage: (FILE) 이미지 파일\n"
+              "example": "nickname: 미밍\nphone: 01088454426\nphoneVerificationCode: 000000\nimage: (FILE) 이미지 파일\ndeleteImage: false\n"
             }
           },
           "required": true
@@ -1869,6 +1869,26 @@
         }
       }
     },
+    "/users/me": {
+      "get": {
+        "tags": [
+          "USER"
+        ],
+        "operationId": "getMe",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseGetMeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/me/minimum": {
       "get": {
         "tags": [
@@ -2645,13 +2665,17 @@
           },
           "phoneVerificationCode": {
             "type": "string",
-            "description": "전화번호 인증 코드 (6자리 숫자)",
+            "description": "전화번호 변경시에만, 전화번호 인증 코드 (6자리 숫자)",
             "pattern": "\\d{6}"
           },
           "image": {
             "type": "string",
             "format": "binary",
             "description": "이미지 파일 (최대 1개, 10MB 이하)"
+          },
+          "deleteImage": {
+            "type": "boolean",
+            "description": "기존 이미지 삭제 여부 (true면 image 보내면 안됨)"
           }
         }
       },
@@ -3110,6 +3134,56 @@
         "properties": {
           "type": {
             "type": "string",
+            "enum": [
+              "UNDECIDED",
+              "GUESTHOUSE",
+              "STAFF",
+              "ADMIN"
+            ]
+          }
+        }
+      },
+      "ApiResponseGetMeResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GetMeResponse"
+          }
+        }
+      },
+      "GetMeResponse": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "description": "닉네임"
+          },
+          "provider": {
+            "type": "string",
+            "description": "로그인 제공자 (네이버, 카카오)"
+          },
+          "phone": {
+            "type": "string",
+            "description": "전화번호"
+          },
+          "profileImage": {
+            "type": "string",
+            "description": "프로필 이미지 링크"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "description": "생년월일"
+          },
+          "type": {
+            "type": "string",
+            "description": "유저 타입: 스텝, 게스트하우스",
             "enum": [
               "UNDECIDED",
               "GUESTHOUSE",

@@ -3348,6 +3348,10 @@
           },
           "locationName": {
             "type": "string"
+          },
+          "personNum": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },

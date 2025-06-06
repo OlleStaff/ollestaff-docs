@@ -176,8 +176,7 @@
                         "sex": "female",
                         "recruitmentEnd": "2025-05-15",
                         "content": "스텝업무",
-                        "latitude": 37.5,
-                        "longitude": 126.9
+                        "locationName": "제주특별자치도 서귀포시 성산읍 고성동서로 2"
                       }
                     ],
                     "cursor": 3,
@@ -231,7 +230,7 @@
               "schema": {
                 "$ref": "#/components/schemas/EmploymentDTO"
               },
-              "example": " {\n  \"employment\": {\n    \"employmentId: 1,\n    \"instarUrl\": \"이미지 파일1, 이미지파일2\",\n    \"personNum\": 01088454426,\n    \"sex\": \"여\",\n    \"startedAt\": \"2025-05-23\",\n    \"endedAt\": \"2025-05-23\",\n    \"recruitmentEnd\": \"2025-05-23\",\n    \"title\": \"맥스네 게하\",\n    \"content\": \"맥스네 게하 스텝 구합니당~\",\n    \"category\": \"LARGE\",\n    \"latitude\": 0.1,\n    \"longitude\": 0.1,\n    \"locationName\": \"String\",\n    \"hashtagName\": [\n      \"string\"\n    ],\n    \"benefitsContent\": [\n      \"복리후생1\",\n      \"복리후생2\"\n    ],\n    \"precautions\": [\n      {\n        \"precautionsTitle\": \"일과 재미, 균형 잡기!\",\n        \"precautionsContent\": \"즐길 때는 확실히! 하지만 업무 시간엔 프로페셔널하게 행동해 주세요.\"\n      }\n    ]\n  },\n  \"images\": [\n    \"MultiPart 파일1\",\n     \"MultiPart 파일1\"\n  ]\n}\n"
+              "example": " {\n  \"employment\": {\n    \"employmentId: 1,\n    \"instarUrl\": \"이미지 파일1, 이미지파일2\",\n    \"personNum\": 3,\n    \"sex\": \"여\",\n    \"startedAt\": \"2025-05-23\",\n    \"endedAt\": \"2025-05-23\",\n    \"recruitmentEnd\": \"2025-05-23\",\n    \"title\": \"맥스네 게하\",\n    \"content\": \"맥스네 게하 스텝 구합니당~\",\n    \"category\": \"LARGE\",\n    \"latitude\": 0.1,\n    \"longitude\": 0.1,\n    \"locationName\": \"제주특별자치도 서귀포시 성산읍 고성동서로 2\",\n    \"hashtagName\": [\n      \"string\"\n    ],\n    \"benefitsContent\": [\n      \"복리후생1\",\n      \"복리후생2\"\n    ],\n    \"precautions\": [\n      {\n        \"precautionsTitle\": \"일과 재미, 균형 잡기!\",\n        \"precautionsContent\": \"즐길 때는 확실히! 하지만 업무 시간엔 프로페셔널하게 행동해 주세요.\"\n      }\n    ]\n  },\n  \"images\": [\n    \"MultiPart 파일1\",\n     \"MultiPart 파일1\"\n  ]\n}\n"
             }
           },
           "required": true
@@ -280,7 +279,39 @@
               "schema": {
                 "$ref": "#/components/schemas/EmploymentDTO"
               },
-              "example": "{\n  \"employment\": {\n    \"instarUrl\": \"String\",\n    \"personNum\": 01088454426,\n    \"sex\": \"여\",\n    \"staredAt\": \"2025-05-23\",\n    \"endedAt\": \"2025-05-23\",\n    \"recruitmentEnd\": \"2025-05-23\",\n    \"title\": \"맥스네 게하\",\n    \"content\": \"맥스네 게하 스텝 구합니당~\",\n    \"category\": \"LARGE\",\n    \"latitude\": 0.1,\n    \"longitude\": 0.1,\n    \"locationName\": \"String\",\n    \"hashtagName\": [\n      \"string\"\n    ],\n    \"benefitsContent\": [\n      \"복리후생1\",\n      \"복리후생2\"\n    ],\n    \"precautions\": [\n      {\n        \"precautionsTitle\": \"일과 재미, 균형 잡기!\",\n        \"precautionsContent\": \"즐길 때는 확실히! 하지만 업무 시간엔 프로페셔널하게 행동해 주세요.\"\n      }\n    ]\n  },\n  \"images\": [\n    \"MultiPart 파일1\",\n     \"MultiPart 파일1\"\n  ]\n}\n"
+              "example": {
+                "employment": {
+                  "instarUrl": "String",
+                  "personNum": 3,
+                  "sex": "여",
+                  "staredAt": "2025-05-23",
+                  "endedAt": "2025-05-23",
+                  "recruitmentEnd": "2025-05-23",
+                  "title": "맥스네 게하",
+                  "content": "맥스네 게하 스텝 구합니당~",
+                  "category": "LARGE",
+                  "latitude": 0.1,
+                  "longitude": 0.1,
+                  "locationName": "제주특별자치도 서귀포시 성산읍 고성동서로 2",
+                  "hashtagName": [
+                    "string"
+                  ],
+                  "benefitsContent": [
+                    "복리후생1",
+                    "복리후생2"
+                  ],
+                  "precautions": [
+                    {
+                      "precautionsTitle": "일과 재미, 균형 잡기!",
+                      "precautionsContent": "즐길 때는 확실히! 하지만 업무 시간엔 프로페셔널하게 행동해 주세요."
+                    }
+                  ]
+                },
+                "images": [
+                  "MultiPart 파일1",
+                  "MultiPart 파일1"
+                ]
+              }
             }
           },
           "required": true
@@ -1874,14 +1905,26 @@
         "tags": [
           "USER"
         ],
+        "summary": "사용자 정보 조회",
         "operationId": "getMe",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "성공",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseGetMeResponse"
+                  "$ref": "#/components/schemas/GetMeResponse"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "nickname": "미밍",
+                    "provider": "kakao",
+                    "phone": "01088454426",
+                    "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
+                    "birthDate": "2000-02-24",
+                    "type": "STAFF"
+                  }
                 }
               }
             }
@@ -2152,7 +2195,7 @@
                     "content": "스텝업무",
                     "latitude": 37.5,
                     "longitude": 126.9,
-                    "locationName": "String",
+                    "locationName": "제주특별자치도 서귀포시 성산읍 고성동서로 2",
                     "benefitsContent": [
                       "점심 제공",
                       "정시 퇴근"
@@ -2268,8 +2311,7 @@
                         "sex": "female",
                         "recruitmentEnd": "2025-05-15",
                         "content": "스텝업무",
-                        "latitude": 37.5,
-                        "longitude": 126.9
+                        "locationName": "제주특별자치도 서귀포시 성산읍 고성동서로 2"
                       }
                     ],
                     "cursor": 3,
@@ -3143,20 +3185,6 @@
           }
         }
       },
-      "ApiResponseGetMeResponse": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
-            "$ref": "#/components/schemas/GetMeResponse"
-          }
-        }
-      },
       "GetMeResponse": {
         "type": "object",
         "properties": {
@@ -3318,13 +3346,8 @@
           "content": {
             "type": "string"
           },
-          "latitude": {
-            "type": "number",
-            "format": "double"
-          },
-          "longitude": {
-            "type": "number",
-            "format": "double"
+          "locationName": {
+            "type": "string"
           }
         }
       },

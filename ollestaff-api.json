@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "OLLESTAFF-API DOCUMENTATION",
-    "description": "application/json 형식의 모든 응답 body는 status: String, message: String, data: Object(Any)로 이루어짐.\n응답에 대해 분기처리는 모두 status 기준으로 하면 됩니다. (혹시라도 다른 형식으로 오면 제보 바랍니다)\n로그인 필요하면 status: NEED_LOGIN, 로그인 했는데 권한 안맞으면 status: NO_AUTHORITY\n",
+    "description": "application/json 형식의 모든 응답 body는\u003cbr\u003e\n{\u003cbr\u003e\n\u0026nbsp;\u0026nbsp;\u0026nbsp;\u0026nbsp;\"status\": String,\u003cbr\u003e\n\u0026nbsp;\u0026nbsp;\u0026nbsp;\u0026nbsp;\"message\": String,\u003cbr\u003e\n\u0026nbsp;\u0026nbsp;\u0026nbsp;\u0026nbsp;\"data\": Object(Any)\u003cbr\u003e\n}\u003cbr\u003e\n로 이루어짐.\u003cbr\u003e\n응답에 대해 분기처리는 모두 status 기준으로 하면 됩니다. (혹시라도 다른 형식으로 오면 제보 바랍니다)\u003cbr\u003e\n로그인 필요하면 status: NEED_LOGIN, 로그인 했는데 권한 안맞으면 status: NO_AUTHORITY\u003cbr\u003e\n",
     "version": "0.0.1-SNAPSHOT"
   },
   "servers": [
@@ -17,32 +17,44 @@
   ],
   "tags": [
     {
-      "name": "ACCOMPANY-COMMENT",
-      "description": "동행 구하기 댓글"
-    },
-    {
-      "name": "EMPLOYMENT",
-      "description": "공고"
-    },
-    {
-      "name": "AUTH",
-      "description": "로그인"
-    },
-    {
-      "name": "APPLICANT",
-      "description": "지원서"
-    },
-    {
-      "name": "ACCOMPANY",
-      "description": "동행 구하기"
-    },
-    {
-      "name": "ACCOMPANY-REPLY",
-      "description": "동행 구하기 답글"
+      "name": "REVIEW",
+      "description": "min"
     },
     {
       "name": "USER",
-      "description": "유저 관련"
+      "description": "유저 관련-yeah"
+    },
+    {
+      "name": "AUTH",
+      "description": "로그인-yeah"
+    },
+    {
+      "name": "USER (GUESTHOUSE)",
+      "description": "yeah"
+    },
+    {
+      "name": "ACCOMPANY",
+      "description": "동행 구하기-yeah"
+    },
+    {
+      "name": "REVIEW_COMMENTS",
+      "description": "min"
+    },
+    {
+      "name": "APPLICANT",
+      "description": "지원서-yeah"
+    },
+    {
+      "name": "EMPLOYMENT",
+      "description": "공고-min"
+    },
+    {
+      "name": "ACCOMPANY-REPLY",
+      "description": "동행 구하기 답글-yeah"
+    },
+    {
+      "name": "ACCOMPANY-COMMENT",
+      "description": "동행 구하기 댓글-yeah"
     }
   ],
   "paths": {
@@ -2190,6 +2202,7 @@
                     "instarUrl": "https://insta.com/example",
                     "personNum": 3,
                     "sex": "female",
+                    "startedAt": "2025-05-10",
                     "endedAt": "2025-05-20",
                     "recruitmentEnd": "2025-05-15",
                     "content": "스텝업무",

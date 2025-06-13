@@ -2209,6 +2209,13 @@
                     "latitude": 37.5,
                     "longitude": 126.9,
                     "locationName": "제주특별자치도 서귀포시 성산읍 고성동서로 2",
+                    "category": "LARGE",
+                    "precaution": [
+                      {
+                        "precautionsTitle": "ㅁㄴㅇㄹ",
+                        "precautionsContent": "ㅁㅇㄹㅁ"
+                      }
+                    ],
                     "benefitsContent": [
                       "점심 제공",
                       "정시 퇴근"
@@ -3434,6 +3441,22 @@
           },
           "locationName": {
             "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "LARGE",
+              "SMALL",
+              "VIEW",
+              "HEALING",
+              "EXPERIENCE"
+            ]
+          },
+          "precaution": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrecautionDTO"
+            }
           }
         }
       },

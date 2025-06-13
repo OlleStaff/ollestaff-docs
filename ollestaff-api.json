@@ -401,9 +401,8 @@
                     "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/bd0b323b-8463-4102-99e5-ec795e266009",
                     "mbti": "ISFP",
                     "link": "https://github.com/hoon-hoon",
-                    "introduction": "자기소개 입니다.",
-                    "motivation": "어필 사항 입니다.",
-                    "appeal": "없음",
+                    "introduction": "자기소개 / 지원 동기 입니다.",
+                    "appeal": "어필 사항 / 경력 사항 입니다",
                     "images": [
                       "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
                       "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
@@ -450,7 +449,7 @@
               "schema": {
                 "$ref": "#/components/schemas/EditApplicantRequest"
               },
-              "example": "profileImage: (FILE) 이미지 파일\nmbti: ISFP\nlink: https://github.com/hoon-hoon\nintroduction: 자기소개 입니다.\nmotivation: 지원 동기 입니다.\nappeal: 어필 사항 입니다.\nimages: https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/f7c0d527-744e-48a3-bda6-e90415ae7eca\nimages: 4.JPG (newImages에 들어가는 파일명 그대로)\nimages: https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/91d15912-cc75-4544-95c4-f2920836d612\nnewImages: (FILE) 4.JPG\n"
+              "example": "profileImage: (FILE) 이미지 파일\nmbti: ISFP\nlink: https://github.com/hoon-hoon\nintroduction: 자기소개 / 지원 동기 입니다.\nappeal: 어필 사항 / 경력 사항 입니다.\nimages: https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/f7c0d527-744e-48a3-bda6-e90415ae7eca\nimages: 4.JPG (newImages에 들어가는 파일명 그대로)\nimages: https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/91d15912-cc75-4544-95c4-f2920836d612\nnewImages: (FILE) 4.JPG\n"
             }
           },
           "required": true
@@ -1381,7 +1380,7 @@
               "schema": {
                 "$ref": "#/components/schemas/CreateApplicantRequest"
               },
-              "example": "profileImage: (FILE) 이미지 파일\nmbti: ISFP\nlink: https://github.com/hoon-hoon\nintroduction: 자기소개 입니다.\nmotivation: 지원 동기 입니다.\nappeal: 어필 사항 입니다.\nimages: (FILE) 이미지 파일1\nimages: (FILE) 이미지 파일2..\n"
+              "example": "profileImage: (FILE) 이미지 파일\nmbti: ISFP\nlink: https://github.com/hoon-hoon\nintroduction: 자기소개 / 지원 동기 입니다.\nappeal: 어필 사항 / 경력 사항 입니다.\nimages: (FILE) 이미지 파일1\nimages: (FILE) 이미지 파일2..\n"
             }
           },
           "required": true
@@ -2858,19 +2857,13 @@
           },
           "introduction": {
             "type": "string",
-            "description": "자기소개 작성",
-            "maxLength": 10000,
-            "minLength": 0
-          },
-          "motivation": {
-            "type": "string",
-            "description": "지원 동기 작성",
+            "description": "자기소개 / 지원 동기 작성",
             "maxLength": 10000,
             "minLength": 0
           },
           "appeal": {
             "type": "string",
-            "description": "어필 사항",
+            "description": "어필 사항 / 경력 사항 작성",
             "maxLength": 10000,
             "minLength": 0
           },
@@ -3142,15 +3135,11 @@
           },
           "introduction": {
             "type": "string",
-            "description": "자기소개 작성"
-          },
-          "motivation": {
-            "type": "string",
-            "description": "지원 동기 작성"
+            "description": "자기소개 / 지원 동기 작성"
           },
           "appeal": {
             "type": "string",
-            "description": "어필 사항"
+            "description": "어필 사항 / 경력 사항 작성"
           },
           "images": {
             "type": "array",

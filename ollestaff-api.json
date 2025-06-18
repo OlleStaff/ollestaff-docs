@@ -345,10 +345,10 @@
         "tags": [
           "EMPLOYMENT"
         ],
-        "summary": "답글 삭제",
+        "summary": "공고 삭제",
         "operationId": "deleteEmployment",
         "requestBody": {
-          "description": "삭제할 답글 ID 목록",
+          "description": "삭제할 공고 ID 목록",
           "content": {
             "application/json": {
               "schema": {
@@ -369,7 +369,7 @@
         },
         "responses": {
           "200": {
-            "description": "답글 삭제 성공",
+            "description": "공고글 삭제 성공",
             "content": {
               "application/json": {
                 "example": {

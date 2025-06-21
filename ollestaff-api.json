@@ -33,6 +33,14 @@
       "description": "yeah"
     },
     {
+      "name": "CHAT",
+      "description": "채팅-min"
+    },
+    {
+      "name": "CHATROOM",
+      "description": "채팅룸-min"
+    },
+    {
       "name": "ACCOMPANY",
       "description": "동행 구하기-yeah"
     },
@@ -153,7 +161,7 @@
           {
             "name": "type",
             "in": "query",
-            "description": "타입 ( 전체, 진행중인공고, 마감공고 )",
+            "description": "타입 ( ALL, IN_PROGRESS, END )",
             "required": true,
             "schema": {
               "type": "string",
@@ -970,7 +978,7 @@
           {
             "name": "reviewType",
             "in": "query",
-            "description": "정렬기준 ( 전체, 인기순 중 하나 선택)",
+            "description": "정렬기준 ( ALL, POPULARITY 중 하나 선택 )",
             "required": true,
             "schema": {
               "type": "string"
@@ -1359,6 +1367,158 @@
               "application/json": {
                 "example": {
                   "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/pictures": {
+      "post": {
+        "tags": [
+          "CHAT"
+        ],
+        "operationId": "upLoadPictures",
+        "parameters": [
+          {
+            "name": "photos",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "binary"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/files": {
+      "post": {
+        "tags": [
+          "CHAT"
+        ],
+        "operationId": "upLoadFile",
+        "parameters": [
+          {
+            "name": "file",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat-room": {
+      "get": {
+        "tags": [
+          "CHATROOM"
+        ],
+        "operationId": "findDirectChatRoom",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "targetId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseLong"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CHATROOM"
+        ],
+        "operationId": "createChatRoom",
+        "parameters": [
+          {
+            "name": "targetId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CHATROOM"
+        ],
+        "operationId": "deleteMyChatRoom",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
                 }
               }
             }
@@ -2004,7 +2164,7 @@
           {
             "name": "reviewType",
             "in": "query",
-            "description": "정렬기준 (1주일, 1개월, 3개월, 6개월)",
+            "description": "정렬기준 (ONE_WEEK, ONE_MONTH, THREE_MONTH,SIX_MONTH)",
             "required": true,
             "schema": {
               "type": "string"
@@ -2095,7 +2255,7 @@
           {
             "name": "reviewType",
             "in": "query",
-            "description": "정렬기준",
+            "description": "정렬기준 ( ALL, COMMENTED )",
             "required": true,
             "schema": {
               "type": "string"
@@ -2270,7 +2430,7 @@
           {
             "name": "type",
             "in": "query",
-            "description": "타입 ( 전체, 진행중인공고, 마감공고 )",
+            "description": "타입 ( ALL, IN_PROGRESS, END )",
             "required": true,
             "schema": {
               "type": "string",
@@ -2284,7 +2444,7 @@
           {
             "name": "category",
             "in": "query",
-            "description": "카테고리 ( 대규모, 소규모 ,뷰맛집, 힐링, 체험 )",
+            "description": "카테고리 ( LARGE, SMALL ,VIEW, HEALING, EXPERIENCE )",
             "required": false,
             "schema": {
               "type": "string",
@@ -2347,6 +2507,75 @@
                 "example": {
                   "status": "REVIEW_NOT_FOUND",
                   "message": "잘못된 경로로 보낸 요청입니다."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat": {
+      "get": {
+        "tags": [
+          "CHAT"
+        ],
+        "operationId": "getAllChatByChatRoom",
+        "parameters": [
+          {
+            "name": "chatRoomId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "cursorMessageId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListChatMessageDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat-room/all": {
+      "get": {
+        "tags": [
+          "CHATROOM"
+        ],
+        "operationId": "findAllMyChatRoom",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseListChatRoomDTO"
                 }
               }
             }
@@ -3117,6 +3346,34 @@
           "pid"
         ]
       },
+      "ApiResponseString": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponseVoid": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
       "CreateApplicantRequest": {
         "type": "object",
         "properties": {
@@ -3441,11 +3698,124 @@
               "EXPERIENCE"
             ]
           },
-          "precaution": {
+          "precautions": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PrecautionDTO"
             }
+          }
+        }
+      },
+      "ApiResponseListChatMessageDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessageDto"
+            }
+          }
+        }
+      },
+      "ChatMessageDto": {
+        "type": "object",
+        "properties": {
+          "messageId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "senderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "chatRoomId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "content": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "TEXT",
+              "PHOTO",
+              "FILE",
+              "APPLICANT",
+              "PASSED"
+            ]
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "readUsers": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "ApiResponseLong": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ApiResponseListChatRoomDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatRoomDTO"
+            }
+          }
+        }
+      },
+      "ChatRoomDTO": {
+        "type": "object",
+        "properties": {
+          "chatRoomId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "lastMessage": {
+            "type": "string"
+          },
+          "unreadCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

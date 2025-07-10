@@ -248,7 +248,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/EmploymentDTO"
+                "$ref": "#/components/schemas/EmploymentUpdateDTO"
               },
               "example": " {\n  \"employment\": {\n    \"employmentId: 1,\n    \"instarUrl\": \"이미지 파일1, 이미지파일2\",\n    \"personNum\": 3,\n    \"sex\": \"여\",\n    \"startedAt\": \"2025-05-23\",\n    \"endedAt\": \"2025-05-23\",\n    \"recruitmentEnd\": \"2025-05-23\",\n    \"title\": \"맥스네 게하\",\n    \"content\": \"맥스네 게하 스텝 구합니당~\",\n    \"category\": \"LARGE\",\n    \"latitude\": 0.1,\n    \"longitude\": 0.1,\n    \"locationName\": \"제주특별자치도 서귀포시 성산읍 고성동서로 2\",\n    \"hashtagName\": [\n      \"string\"\n    ],\n    \"benefitsContent\": [\n      \"복리후생1\",\n      \"복리후생2\"\n    ],\n    \"precautions\": [\n      {\n        \"precautionsTitle\": \"일과 재미, 균형 잡기!\",\n        \"precautionsContent\": \"즐길 때는 확실히! 하지만 업무 시간엔 프로페셔널하게 행동해 주세요.\"\n      }\n    ]\n  },\n  \"images\": [\n    \"MultiPart 파일1\",\n     \"MultiPart 파일1\"\n  ]\n}\n"
             }
@@ -1102,7 +1102,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateReviewCommnetDTO"
+                "$ref": "#/components/schemas/CreateReviewCommentDTO"
               },
               "example": {
                 "reviewComment": "좋은 글 써주셔서 감사합니다~~"
@@ -1151,6 +1151,52 @@
                 "example": {
                   "status": "DUPLICATE_COMMENT",
                   "message": "이미 이 리뷰에 댓글을 작성하셨습니다."
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "REVIEW_COMMENTS"
+        ],
+        "summary": "리뷰 댓글 삭제",
+        "operationId": "deleteReviewComment",
+        "parameters": [
+          {
+            "name": "review_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "reviewId",
+            "in": "query",
+            "description": "리뷰 id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "리뷰 댓글 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "댓글이 존재하지 않음 ",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "INTERNAL_SERVER_ERROR",
+                  "message": "댓글이 존재하지 않습니다."
                 }
               }
             }
@@ -2859,50 +2905,6 @@
         }
       }
     },
-    "/reviews/comments/{reviewCommentId}": {
-      "delete": {
-        "tags": [
-          "REVIEW_COMMENTS"
-        ],
-        "summary": "리뷰 댓글 삭제",
-        "operationId": "deleteReviewComment",
-        "parameters": [
-          {
-            "name": "reviewCommentId",
-            "in": "path",
-            "description": "리뷰 댓글 id",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "리뷰 댓글 삭제 성공",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "SUCCESS"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "댓글이 존재하지 않음 ",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "INTERNAL_SERVER_ERROR",
-                  "message": "댓글이 존재하지 않습니다."
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/employments/delete-heart": {
       "delete": {
         "tags": [
@@ -2969,7 +2971,7 @@
           }
         }
       },
-      "EmploymentDTO": {
+      "EmploymentUpdateDTO": {
         "type": "object",
         "properties": {
           "employmentId": {
@@ -3035,13 +3037,6 @@
               "type": "string"
             }
           },
-          "images": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "binary"
-            }
-          },
           "precautions": {
             "type": "array",
             "items": {
@@ -3050,6 +3045,19 @@
           },
           "locationName": {
             "type": "string"
+          },
+          "imageUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "newImages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
           }
         }
       },
@@ -3282,7 +3290,7 @@
           }
         }
       },
-      "CreateReviewCommnetDTO": {
+      "CreateReviewCommentDTO": {
         "type": "object",
         "properties": {
           "reviewComment": {
@@ -3345,6 +3353,90 @@
           "authority",
           "pid"
         ]
+      },
+      "EmploymentDTO": {
+        "type": "object",
+        "properties": {
+          "employmentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "instarUrl": {
+            "type": "string"
+          },
+          "personNum": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sex": {
+            "type": "string",
+            "description": "Male/Female/All"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "recruitmentEnd": {
+            "type": "string",
+            "format": "date"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "LARGE",
+              "SMALL",
+              "VIEW",
+              "HEALING",
+              "EXPERIENCE"
+            ]
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "hashtagName": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "benefitsContent": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "precautions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrecautionDTO"
+            }
+          },
+          "locationName": {
+            "type": "string"
+          }
+        }
       },
       "ApiResponseString": {
         "type": "object",
@@ -3754,13 +3846,6 @@
           "timestamp": {
             "type": "integer",
             "format": "int64"
-          },
-          "readUsers": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
           }
         }
       },

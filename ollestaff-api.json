@@ -17,6 +17,10 @@
   ],
   "tags": [
     {
+      "name": "CHAT-WEBSOCKET",
+      "description": "채팅 (웹소켓)-min/yeah | REST API가 아닌 WebSocket으로 호출해야 함"
+    },
+    {
       "name": "REVIEW",
       "description": "min"
     },
@@ -25,20 +29,8 @@
       "description": "유저 관련-yeah"
     },
     {
-      "name": "AUTH",
-      "description": "로그인-yeah"
-    },
-    {
-      "name": "USER (GUESTHOUSE)",
-      "description": "yeah"
-    },
-    {
       "name": "CHAT",
       "description": "채팅-min"
-    },
-    {
-      "name": "CHATROOM",
-      "description": "채팅룸-min"
     },
     {
       "name": "ACCOMPANY",
@@ -57,12 +49,28 @@
       "description": "공고-min"
     },
     {
-      "name": "ACCOMPANY-REPLY",
-      "description": "동행 구하기 답글-yeah"
-    },
-    {
       "name": "ACCOMPANY-COMMENT",
       "description": "동행 구하기 댓글-yeah"
+    },
+    {
+      "name": "APPLY",
+      "description": "공고 지원-yeah"
+    },
+    {
+      "name": "AUTH",
+      "description": "로그인-yeah"
+    },
+    {
+      "name": "USER (GUESTHOUSE)",
+      "description": "yeah"
+    },
+    {
+      "name": "CHATROOM",
+      "description": "채팅룸-min"
+    },
+    {
+      "name": "ACCOMPANY-REPLY",
+      "description": "동행 구하기 답글-yeah"
     }
   ],
   "paths": {
@@ -111,7 +119,7 @@
               "schema": {
                 "$ref": "#/components/schemas/SignUpRequest"
               },
-              "example": "nickname: 미밍\nphone: 01088454426\nphoneVerificationCode: 000000\nbirthDate: 20000224\nimage: (FILE) 이미지 파일\nagreements: 올래스텝 이용약관_2025-04-09_v1\nagreements: 개인정보처리방침_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-필수_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-마케팅_2025-04-09_v1\n"
+              "example": "nickname: 미밍\nphone: 01088454426\nphoneVerificationCode: 000000\ngender: FEMALE\nbirthDate: 20000224\nimage: (FILE) 이미지 파일\nagreements: 올래스텝 이용약관_2025-04-09_v1\nagreements: 개인정보처리방침_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-필수_2025-04-09_v1\nagreements: 올래스텝 개인정보처리 동의서-마케팅_2025-04-09_v1\n"
             }
           },
           "required": true
@@ -1420,33 +1428,97 @@
         }
       }
     },
-    "/chat/pictures": {
+    "/chat/messages/contents": {
+      "post": {
+        "tags": [
+          "CHAT-WEBSOCKET"
+        ],
+        "summary": "❌ 없는 API) 문서화를 위한 MessageContent 스키마 등록용",
+        "operationId": "contents",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "textContent": {
+                    "$ref": "#/components/schemas/TextContent"
+                  },
+                  "imageContent": {
+                    "$ref": "#/components/schemas/ImageContent"
+                  },
+                  "fileContent": {
+                    "$ref": "#/components/schemas/FileContent"
+                  },
+                  "applicantContent": {
+                    "$ref": "#/components/schemas/ApplicantContent"
+                  },
+                  "acceptedContent": {
+                    "$ref": "#/components/schemas/AcceptedContent"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/chat/images": {
       "post": {
         "tags": [
           "CHAT"
         ],
-        "operationId": "upLoadPictures",
-        "parameters": [
-          {
-            "name": "photos",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "binary"
+        "summary": "채팅 이미지 업로드",
+        "description": "업로드 후 결과를 받아서 WebSocket으로 content에 담아 메세지 보내면 됨",
+        "operationId": "upLoadImages",
+        "requestBody": {
+          "description": "이미지 파일 리스트",
+          "content": {
+            "multipart/form-data": {
+              "example": "        images: (FILE) 이미지 파일1\n        images: (FILE) 이미지 파일2..\n"
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                },
+                "required": [
+                  "images"
+                ]
               }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "이미지 업로드 성공",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseString"
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "images": [
+                      "https://1.jpg",
+                      "https://2.jpg"
+                    ]
+                  }
                 }
               }
             }
@@ -1459,25 +1531,46 @@
         "tags": [
           "CHAT"
         ],
+        "summary": "채팅 파일 업로드",
+        "description": "업로드 후 결과를 받아서 WebSocket으로 content에 담아 메세지 보내면 됨",
         "operationId": "upLoadFile",
-        "parameters": [
-          {
-            "name": "file",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "binary"
+        "requestBody": {
+          "description": "파일",
+          "content": {
+            "multipart/form-data": {
+              "example": "        file: (FILE) 이미지 파일\n"
+            },
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "이미지 업로드 성공",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseString"
+                  "$ref": "#/components/schemas/FileContent"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "name": "이력서.pdf",
+                    "link": "https://이력서.pdf"
+                  }
                 }
               }
             }
@@ -1485,25 +1578,18 @@
         }
       }
     },
-    "/chat-room": {
+    "/chat-rooms": {
       "get": {
         "tags": [
           "CHATROOM"
         ],
+        "summary": "특정 유저와의 채팅방 찾기",
         "operationId": "findDirectChatRoom",
         "parameters": [
           {
-            "name": "userId",
+            "name": "target",
             "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "targetId",
-            "in": "query",
+            "description": "상대 유저 ID",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1513,11 +1599,23 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "찾은 채팅방 ID",
             "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseLong"
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": 123
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "채팅방 없음",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "CHATROOM_NOT_FOUND",
+                  "message": "can not find a chat room with user id: 629"
                 }
               }
             }
@@ -1528,11 +1626,14 @@
         "tags": [
           "CHATROOM"
         ],
+        "summary": "채팅방 만들기",
+        "description": "이미 상대방과의 채팅방이 존재하면 기존 채팅방 ID를 반환함",
         "operationId": "createChatRoom",
         "parameters": [
           {
-            "name": "targetId",
+            "name": "target",
             "in": "query",
+            "description": "상대 유저 ID",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1542,29 +1643,88 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "생성된 채팅방 ID",
             "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseVoid"
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": 123
                 }
               }
             }
           }
         }
-      },
-      "delete": {
+      }
+    },
+    "/apply": {
+      "post": {
         "tags": [
-          "CHATROOM"
+          "APPLY"
         ],
-        "operationId": "deleteMyChatRoom",
+        "summary": "공고 지원",
+        "operationId": "apply",
+        "parameters": [
+          {
+            "name": "employmentId",
+            "in": "query",
+            "description": "공고 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "지원 성공",
             "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseVoid"
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/apply/accept": {
+      "post": {
+        "tags": [
+          "APPLY"
+        ],
+        "summary": "공고 지원 합격",
+        "operationId": "accept",
+        "parameters": [
+          {
+            "name": "applicantId",
+            "in": "query",
+            "description": "지원서 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "employmentId",
+            "in": "query",
+            "description": "공고 ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "지원서 합격 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
                 }
               }
             }
@@ -1612,6 +1772,127 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/app/chat/send": {
+      "post": {
+        "tags": [
+          "CHAT-WEBSOCKET"
+        ],
+        "summary": "메세지 전송 (웹소켓)",
+        "operationId": "receiveMessage",
+        "requestBody": {
+          "description": "메세지 내용",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageSendDto"
+              },
+              "examples": {
+                "텍스트 메세지": {
+                  "description": "텍스트 메세지",
+                  "value": {
+                    "chatRoomId": 123,
+                    "messageType": "TEXT",
+                    "content": {
+                      "text": "안녕하세요"
+                    }
+                  }
+                },
+                "이미지 메세지": {
+                  "description": "이미지 메세지",
+                  "value": {
+                    "chatRoomId": 123,
+                    "messageType": "IMAGE",
+                    "content": {
+                      "images": [
+                        "https://1.jpg",
+                        "https://2.jpg"
+                      ]
+                    }
+                  }
+                },
+                "파일 메세지": {
+                  "description": "파일 메세지",
+                  "value": {
+                    "chatRoomId": 123,
+                    "messageType": "FILE",
+                    "content": {
+                      "name": "예창언_CV.pdf",
+                      "link": "https://예창언_CV.pdf"
+                    }
+                  }
+                },
+                "지원서 메세지": {
+                  "description": "지원서 메세지",
+                  "value": {
+                    "chatRoomId": 123,
+                    "messageType": "APPLICANT",
+                    "content": {
+                      "applicantId": 9007199254740991,
+                      "title": "🔔 스텝 문의합니다!",
+                      "detail": "결 게스트 하우스 초인싸 6월 스텝 모집!"
+                    }
+                  }
+                },
+                "합격 메세지": {
+                  "description": "합격 메세지",
+                  "value": {
+                    "chatRoomId": 123,
+                    "messageType": "ACCEPTED",
+                    "content": {
+                      "title": "🏠 필립 게스트 하우스",
+                      "detail": "추카햄수다! 합격허셨수다 🥳 업무 주의사항을 참고하세요!",
+                      "employmentId": 9007199254740991
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/app/chat/read": {
+      "post": {
+        "tags": [
+          "CHAT-WEBSOCKET"
+        ],
+        "summary": "메세지 읽음 처리 (웹소켓)",
+        "description": "메세지를 최초 불러왔을 때나, 새로운 메세지를 받아 렌더링 할 때 보낸 사람 상관 없이 가장 마지막 메세지를 읽음 처리해야 함",
+        "operationId": "readMessage",
+        "requestBody": {
+          "description": "메세지",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageDto"
+              },
+              "example": {
+                "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                "senderId": 15,
+                "timestamp": 9007199254740991,
+                "chatRoomId": 123,
+                "messageType": "TEXT",
+                "content": {
+                  "text": "안녕하세요"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2139,6 +2420,7 @@
                     "provider": "kakao",
                     "phone": "01088454426",
                     "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
+                    "gender": "FEMALE",
                     "birthDate": "2000-02-24",
                     "type": "STAFF"
                   }
@@ -2171,6 +2453,103 @@
                     "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
                     "type": "STAFF",
                     "onboarded": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/queue/chat": {
+      "get": {
+        "tags": [
+          "CHAT-WEBSOCKET"
+        ],
+        "summary": "메세지 수신",
+        "description": "로그인시 반드시 구독해야 함",
+        "operationId": "subscribeMessage",
+        "responses": {
+          "default": {
+            "description": "수신한 메세지",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageDto"
+                },
+                "examples": {
+                  "텍스트 메세지": {
+                    "description": "텍스트 메세지",
+                    "value": {
+                      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                      "senderId": 15,
+                      "timestamp": 9007199254740991,
+                      "chatRoomId": 123,
+                      "messageType": "TEXT",
+                      "content": {
+                        "text": "안녕하세요"
+                      }
+                    }
+                  },
+                  "이미지 메세지": {
+                    "description": "이미지 메세지",
+                    "value": {
+                      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                      "senderId": 15,
+                      "timestamp": 9007199254740991,
+                      "chatRoomId": 123,
+                      "messageType": "IMAGE",
+                      "content": {
+                        "images": [
+                          "https://1.jpg",
+                          "https://2.jpg"
+                        ]
+                      }
+                    }
+                  },
+                  "파일 메세지": {
+                    "description": "파일 메세지",
+                    "value": {
+                      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                      "senderId": 15,
+                      "timestamp": 9007199254740991,
+                      "chatRoomId": 123,
+                      "messageType": "FILE",
+                      "content": {
+                        "name": "예창언_CV.pdf",
+                        "link": "https://예창언_CV.pdf"
+                      }
+                    }
+                  },
+                  "지원서 메세지": {
+                    "description": "지원서 메세지",
+                    "value": {
+                      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                      "senderId": 15,
+                      "timestamp": 9007199254740991,
+                      "chatRoomId": 123,
+                      "messageType": "APPLICANT",
+                      "content": {
+                        "applicantId": 9007199254740991,
+                        "title": "🔔 스텝 문의합니다!",
+                        "detail": "결 게스트 하우스 초인싸 6월 스텝 모집!"
+                      }
+                    }
+                  },
+                  "합격 메세지": {
+                    "description": "합격 메세지",
+                    "value": {
+                      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                      "senderId": 15,
+                      "timestamp": 9007199254740991,
+                      "chatRoomId": 123,
+                      "messageType": "ACCEPTED",
+                      "content": {
+                        "title": "🏠 필립 게스트 하우스",
+                        "detail": "추카햄수다! 합격허셨수다 🥳 업무 주의사항을 참고하세요!",
+                        "employmentId": 9007199254740991
+                      }
+                    }
                   }
                 }
               }
@@ -2560,16 +2939,19 @@
         }
       }
     },
-    "/chat": {
+    "/chat/messages": {
       "get": {
         "tags": [
           "CHAT"
         ],
-        "operationId": "getAllChatByChatRoom",
+        "summary": "채팅 메세지 조회",
+        "description": "최신순으로 가져옴",
+        "operationId": "getMessages",
         "parameters": [
           {
             "name": "chatRoomId",
             "in": "query",
+            "description": "채팅방 ID",
             "required": true,
             "schema": {
               "type": "integer",
@@ -2577,31 +2959,53 @@
             }
           },
           {
-            "name": "cursorMessageId",
+            "name": "cursor",
             "in": "query",
-            "required": true,
+            "description": "커서 (조회한 마지막 메세지 ID), 없으면 최신 메세지부터 가져옴",
+            "required": false,
             "schema": {
               "type": "string",
               "format": "uuid"
             }
           },
           {
-            "name": "pageSize",
+            "name": "size",
             "in": "query",
-            "required": true,
+            "description": "가져올 크기",
+            "required": false,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 20
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "메세지",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseListChatMessageDto"
+                  "$ref": "#/components/schemas/GetMessagesDto"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "messages": [
+                      {
+                        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        "chatRoomId": 123,
+                        "senderId": 12,
+                        "timestamp": 9007199254740991,
+                        "messageType": "TEXT",
+                        "content": {
+                          "text": "안녕"
+                        }
+                      }
+                    ],
+                    "cursor": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                    "hasNext": true
+                  }
                 }
               }
             }
@@ -2609,19 +3013,100 @@
         }
       }
     },
-    "/chat-room/all": {
+    "/chat-rooms/{chat-room-id}": {
       "get": {
         "tags": [
           "CHATROOM"
         ],
-        "operationId": "findAllMyChatRoom",
+        "summary": "특정 채팅방 정보 가져오기",
+        "operationId": "getChatRoomInfo",
+        "parameters": [
+          {
+            "name": "chat-room-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "채팅방 정보",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiResponseListChatRoomDTO"
+                  "$ref": "#/components/schemas/ChatRoomInfo"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "id": 129,
+                    "title": "피카레스크",
+                    "image": "https://1.jpg",
+                    "detail": "ENFP | 만 27세 (남)"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat-rooms/all": {
+      "get": {
+        "tags": [
+          "CHATROOM"
+        ],
+        "summary": "내 채팅방 리스트 가져오기",
+        "description": "페이징 없음. 마지막 메세지 기준으로 최신순으로 정렬됨",
+        "operationId": "findAllMyChatRooms",
+        "responses": {
+          "200": {
+            "description": "채팅방 리스트",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatRoomList"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "chatRooms": [
+                      {
+                        "id": 123,
+                        "title": "후닝",
+                        "lastMessage": {
+                          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                          "chatRoomId": 123,
+                          "senderId": 128,
+                          "timestamp": 9007199254740991,
+                          "messageType": "TEXT",
+                          "content": {
+                            "text": "안녕"
+                          }
+                        },
+                        "unreadMessageCount": 3
+                      },
+                      {
+                        "id": 124,
+                        "title": "훈",
+                        "image": "https://1.jpg",
+                        "lastMessage": {
+                          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                          "chatRoomId": 124,
+                          "senderId": 127,
+                          "timestamp": 7007199254740991,
+                          "messageType": "TEXT",
+                          "content": {
+                            "text": "안녕안녕"
+                          }
+                        },
+                        "unreadMessageCount": 0
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -3210,6 +3695,14 @@
             "format": "binary",
             "description": "이미지 파일 (최대 1개, 10MB 이하)"
           },
+          "gender": {
+            "type": "string",
+            "description": "성별",
+            "enum": [
+              "남자",
+              "여자"
+            ]
+          },
           "birthDate": {
             "type": "integer",
             "format": "int32",
@@ -3228,6 +3721,7 @@
         "required": [
           "agreements",
           "birthDate",
+          "gender",
           "nickname",
           "phone",
           "phoneVerificationCode"
@@ -3438,31 +3932,87 @@
           }
         }
       },
-      "ApiResponseString": {
+      "TextContent": {
         "type": "object",
+        "description": "텍스트 메세지",
         "properties": {
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
-            "type": "string"
+          "text": {
+            "type": "string",
+            "description": "메세지 내용"
           }
         }
       },
-      "ApiResponseVoid": {
+      "ImageContent": {
         "type": "object",
+        "description": "이미지 메세지",
         "properties": {
-          "status": {
-            "type": "string"
+          "images": {
+            "type": "array",
+            "description": "이미지 링크 배열",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "FileContent": {
+        "type": "object",
+        "description": "파일 메세지",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "파일명"
           },
-          "message": {
-            "type": "string"
+          "link": {
+            "type": "string",
+            "description": "파일 링크"
+          }
+        }
+      },
+      "ApplicantContent": {
+        "type": "object",
+        "description": "지원서 메세지",
+        "properties": {
+          "applicantId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "지원서 ID"
           },
-          "data": {
-            "type": "object"
+          "employmentId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "공고 ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "지원 메세지 제목",
+            "example": "🔔 스텝 문의합니다!"
+          },
+          "detail": {
+            "type": "string",
+            "description": "지원한 공고명",
+            "example": "결 게스트 하우스 초인싸 6월 스텝 모집!"
+          }
+        }
+      },
+      "AcceptedContent": {
+        "type": "object",
+        "description": "합격 메세지",
+        "properties": {
+          "employmentId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "공고 ID"
+          },
+          "title": {
+            "type": "string",
+            "description": "공고명",
+            "example": "🏠 필립 게스트 하우스"
+          },
+          "detail": {
+            "type": "string",
+            "description": "합격 메세지",
+            "example": "추카햄수다! 합격허셨수다 🥳 업무 주의사항을 참고하세요!"
           }
         }
       },
@@ -3497,6 +4047,114 @@
               "type": "string",
               "format": "binary"
             }
+          }
+        }
+      },
+      "MessageContent": {
+        "type": "object"
+      },
+      "MessageSendDto": {
+        "type": "object",
+        "discriminator": {
+          "propertyName": "messageType"
+        },
+        "properties": {
+          "chatRoomId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "채팅방 ID"
+          },
+          "messageType": {
+            "type": "string",
+            "description": "메시지 타입",
+            "enum": [
+              "TEXT",
+              "IMAGE",
+              "FILE",
+              "APPLICANT",
+              "ACCEPTED"
+            ]
+          },
+          "content": {
+            "$ref": "#/components/schemas/MessageContent",
+            "description": "메시지 컨텐츠",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextContent"
+              },
+              {
+                "$ref": "#/components/schemas/ImageContent"
+              },
+              {
+                "$ref": "#/components/schemas/FileContent"
+              },
+              {
+                "$ref": "#/components/schemas/ApplicantContent"
+              },
+              {
+                "$ref": "#/components/schemas/AcceptedContent"
+              }
+            ]
+          }
+        }
+      },
+      "MessageDto": {
+        "type": "object",
+        "discriminator": {
+          "propertyName": "messageType"
+        },
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "메세지 ID"
+          },
+          "chatRoomId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "채팅방 ID"
+          },
+          "senderId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "보낸 유저 ID"
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64",
+            "description": "보낸 시간 (unix)"
+          },
+          "messageType": {
+            "type": "string",
+            "description": "메시지 타입",
+            "enum": [
+              "TEXT",
+              "IMAGE",
+              "FILE",
+              "APPLICANT",
+              "ACCEPTED"
+            ]
+          },
+          "content": {
+            "$ref": "#/components/schemas/MessageContent",
+            "description": "메시지 컨텐츠",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TextContent"
+              },
+              {
+                "$ref": "#/components/schemas/ImageContent"
+              },
+              {
+                "$ref": "#/components/schemas/FileContent"
+              },
+              {
+                "$ref": "#/components/schemas/ApplicantContent"
+              },
+              {
+                "$ref": "#/components/schemas/AcceptedContent"
+              }
+            ]
           }
         }
       },
@@ -3798,109 +4456,89 @@
           }
         }
       },
-      "ApiResponseListChatMessageDto": {
+      "GetMessagesDto": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
+          "messages": {
             "type": "array",
+            "description": "메세지 리스트",
             "items": {
-              "$ref": "#/components/schemas/ChatMessageDto"
+              "$ref": "#/components/schemas/MessageDto"
             }
+          },
+          "cursor": {
+            "type": "string",
+            "format": "uuid",
+            "description": "커서 (조회한 마지막 메세지 ID)"
+          },
+          "hasNext": {
+            "type": "boolean",
+            "description": "과거 메세지 존재 여부"
           }
         }
       },
-      "ChatMessageDto": {
+      "ChatRoomInfo": {
         "type": "object",
         "properties": {
-          "messageId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "senderId": {
+          "id": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "채팅방 ID"
           },
-          "chatRoomId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "content": {
-            "type": "string"
-          },
-          "messageType": {
+          "title": {
             "type": "string",
-            "enum": [
-              "TEXT",
-              "PHOTO",
-              "FILE",
-              "APPLICANT",
-              "PASSED"
+            "description": "채팅방 제목"
+          },
+          "image": {
+            "type": "string",
+            "description": "채팅방 이미지"
+          },
+          "detail": {
+            "type": "string",
+            "description": "채팅방 설명",
+            "examples": [
+              "ENFP | 만 27세 (남)",
+              "\\uD83C\\uDFE0 게스트하우스"
             ]
-          },
-          "timestamp": {
-            "type": "integer",
-            "format": "int64"
           }
         }
       },
-      "ApiResponseLong": {
+      "ChatRoom": {
         "type": "object",
         "properties": {
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
+          "id": {
             "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "ApiResponseListChatRoomDTO": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string"
+            "format": "int64",
+            "description": "채팅방 ID"
           },
-          "message": {
-            "type": "string"
+          "title": {
+            "type": "string",
+            "description": "채팅방 이름"
           },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ChatRoomDTO"
-            }
-          }
-        }
-      },
-      "ChatRoomDTO": {
-        "type": "object",
-        "properties": {
-          "chatRoomId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "nickname": {
-            "type": "string"
+          "image": {
+            "type": "string",
+            "description": "채팅방 이미지"
           },
           "lastMessage": {
-            "type": "string"
+            "$ref": "#/components/schemas/MessageDto",
+            "description": "마지막 메세지"
           },
-          "unreadCount": {
+          "unreadMessageCount": {
             "type": "integer",
-            "format": "int64"
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
+            "format": "int64",
+            "description": "안읽은 메세지 수"
+          }
+        }
+      },
+      "ChatRoomList": {
+        "type": "object",
+        "properties": {
+          "chatRooms": {
+            "type": "array",
+            "description": "채팅방 리스트",
+            "items": {
+              "$ref": "#/components/schemas/ChatRoom"
+            }
           }
         }
       },

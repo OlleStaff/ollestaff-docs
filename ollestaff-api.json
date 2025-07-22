@@ -1657,6 +1657,54 @@
       }
     },
     "/apply": {
+      "get": {
+        "tags": [
+          "APPLY"
+        ],
+        "summary": "특정 유저(지원자)가 내 공고에 지원한 내역 가져오기",
+        "operationId": "getApplies",
+        "parameters": [
+          {
+            "name": "applicantUserId",
+            "in": "query",
+            "description": "유저(지원자) ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "지원 내역 가져오기 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "employmentPreviewDTOS": [
+                      {
+                        "employmentId": 3,
+                        "image": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ab34ab2e-8469-47a8-97b2-a6722e22b104",
+                        "hashtagName": [
+                          "#아오",
+                          "#힘들어요"
+                        ],
+                        "title": "결 게하",
+                        "sex": "female",
+                        "recruitmentEnd": "2025-05-15",
+                        "content": "스텝업무",
+                        "locationName": "제주특별자치도 서귀포시 성산읍 고성동서로 2"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "APPLY"
@@ -1822,30 +1870,6 @@
                     "content": {
                       "name": "예창언_CV.pdf",
                       "link": "https://예창언_CV.pdf"
-                    }
-                  }
-                },
-                "지원서 메세지": {
-                  "description": "지원서 메세지",
-                  "value": {
-                    "chatRoomId": 123,
-                    "messageType": "APPLICANT",
-                    "content": {
-                      "applicantId": 9007199254740991,
-                      "title": "🔔 스텝 문의합니다!",
-                      "detail": "결 게스트 하우스 초인싸 6월 스텝 모집!"
-                    }
-                  }
-                },
-                "합격 메세지": {
-                  "description": "합격 메세지",
-                  "value": {
-                    "chatRoomId": 123,
-                    "messageType": "ACCEPTED",
-                    "content": {
-                      "title": "🏠 필립 게스트 하우스",
-                      "detail": "추카햄수다! 합격허셨수다 🥳 업무 주의사항을 참고하세요!",
-                      "employmentId": 9007199254740991
                     }
                   }
                 }
@@ -2523,18 +2547,7 @@
                   },
                   "지원서 메세지": {
                     "description": "지원서 메세지",
-                    "value": {
-                      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-                      "senderId": 15,
-                      "timestamp": 9007199254740991,
-                      "chatRoomId": 123,
-                      "messageType": "APPLICANT",
-                      "content": {
-                        "applicantId": 9007199254740991,
-                        "title": "🔔 스텝 문의합니다!",
-                        "detail": "결 게스트 하우스 초인싸 6월 스텝 모집!"
-                      }
-                    }
+                    "value": "    {\n      \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n      \"senderId\": 15,\n      \"timestamp\": 9007199254740991,\n      \"chatRoomId\": 123,\n      \"messageType\": \"APPLICANT\",\n      \"content\": {\n        \"applicantId\": 9007199254740991,\n        \"employmentId\" 123,\n        \"title\": \"🔔 스텝 문의합니다!\",\n        \"detail\": \"결 게스트 하우스 초인싸 6월 스텝 모집!\"\n      }\n    }\n"
                   },
                   "합격 메세지": {
                     "description": "합격 메세지",

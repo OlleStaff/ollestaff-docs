@@ -3788,16 +3788,22 @@
         "properties": {
           "rating": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "별점"
           },
           "review": {
-            "type": "string"
+            "type": "string",
+            "description": "리뷰내용",
+            "maxLength": 300,
+            "minLength": 0
           },
           "disclosure": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "공개false/비공개true"
           },
           "images": {
             "type": "array",
+            "description": "이미지",
             "items": {
               "type": "string",
               "format": "binary"
@@ -3805,17 +3811,29 @@
           },
           "employmentId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "공고id"
           }
-        }
+        },
+        "required": [
+          "disclosure",
+          "employmentId",
+          "review"
+        ]
       },
       "CreateReviewCommentDTO": {
         "type": "object",
         "properties": {
           "reviewComment": {
-            "type": "string"
+            "type": "string",
+            "description": "리뷰 댓글",
+            "maxLength": 200,
+            "minLength": 0
           }
-        }
+        },
+        "required": [
+          "reviewComment"
+        ]
       },
       "NaverAuthenticationRequest": {
         "type": "object",
@@ -3839,12 +3857,12 @@
         "properties": {
           "code": {
             "type": "string",
-            "minLength": 1
+            "description": "code 또는 accessToken 둘 중 하나 필수"
+          },
+          "accessToken": {
+            "type": "string"
           }
-        },
-        "required": [
-          "code"
-        ]
+        }
       },
       "DevAuthenticationRequest": {
         "type": "object",
@@ -4292,61 +4310,91 @@
         "properties": {
           "reviewId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "리뷰id"
           },
           "rating": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "별점"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "공고 제목",
+            "maxLength": 200,
+            "minLength": 0
           },
           "nickName": {
-            "type": "string"
+            "type": "string",
+            "description": "내 닉네임"
           },
           "images": {
             "type": "array",
+            "description": "이미지 주소",
             "items": {
               "type": "string"
             }
           },
           "review": {
-            "type": "string"
+            "type": "string",
+            "description": "리뷰내용",
+            "maxLength": 300,
+            "minLength": 0
           },
           "disclosure": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "공개false/비공개true"
           },
           "reviewComment": {
-            "type": "string"
+            "type": "string",
+            "description": "리뷰에 달린 댓글",
+            "maxLength": 200,
+            "minLength": 0
           },
           "reviewDate": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "리뷰 단 날짜"
           },
           "reviewCommentDate": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "리뷰에 댓글 단 날짜"
           },
           "hostNickName": {
-            "type": "string"
+            "type": "string",
+            "description": "host 닉네임"
           }
-        }
+        },
+        "required": [
+          "disclosure",
+          "hostNickName",
+          "nickName",
+          "review",
+          "reviewComment",
+          "reviewCommentDate",
+          "reviewDate",
+          "reviewId"
+        ]
       },
       "AllReviewDTO": {
         "type": "object",
         "properties": {
           "allReviewInfoDTOS": {
             "type": "array",
+            "description": "전체 리뷰",
             "items": {
               "$ref": "#/components/schemas/AllReviewInfoDTO"
             }
           },
           "cursorId": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "커서 id"
           },
           "hasNext": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "다음 페이지 존재 여부"
           },
           "countReview": {
             "type": "integer",

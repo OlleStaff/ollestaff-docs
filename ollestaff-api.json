@@ -2895,7 +2895,7 @@
             "name": "category",
             "in": "query",
             "description": "카테고리 ( LARGE, SMALL ,VIEW, HEALING, EXPERIENCE )",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string",
               "enum": [
@@ -3489,11 +3489,15 @@
             "format": "int64"
           },
           "instarUrl": {
-            "type": "string"
+            "type": "string",
+            "description": "인스타 url",
+            "maxLength": 100,
+            "minLength": 10
           },
           "personNum": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "전화번호"
           },
           "sex": {
             "type": "string",
@@ -3501,24 +3505,34 @@
           },
           "startedAt": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "시작일"
           },
           "endedAt": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "종료일"
           },
           "recruitmentEnd": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "공고 마감일"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "공고 제목",
+            "maxLength": 200,
+            "minLength": 0
           },
           "content": {
-            "type": "string"
+            "type": "string",
+            "description": "공고 내용",
+            "maxLength": 500,
+            "minLength": 0
           },
           "category": {
             "type": "string",
+            "description": "LARGE/SMALL/VIEW/HEALING/EXPERIENCE",
             "enum": [
               "LARGE",
               "SMALL",
@@ -3529,58 +3543,89 @@
           },
           "latitude": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "숙소 위도"
           },
           "longitude": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "숙소 경도"
           },
           "hashtagName": {
             "type": "array",
+            "description": "해시태그",
             "items": {
               "type": "string"
             }
           },
           "benefitsContent": {
             "type": "array",
+            "description": "복리후생",
             "items": {
               "type": "string"
             }
           },
           "precautions": {
             "type": "array",
+            "description": "주의사항",
             "items": {
               "$ref": "#/components/schemas/PrecautionDTO"
             }
           },
           "locationName": {
-            "type": "string"
+            "type": "string",
+            "description": "숙소 이름",
+            "maxLength": 200,
+            "minLength": 0
           },
           "imageUrls": {
             "type": "array",
+            "description": "기존 이미지 주소",
             "items": {
               "type": "string"
             }
           },
           "newImages": {
             "type": "array",
+            "description": "새로 추가할 이미지 주소",
             "items": {
               "type": "string",
               "format": "binary"
             }
           }
-        }
+        },
+        "required": [
+          "benefitsContent",
+          "category",
+          "content",
+          "endedAt",
+          "hashtagName",
+          "latitude",
+          "locationName",
+          "longitude",
+          "personNum",
+          "precautions",
+          "recruitmentEnd",
+          "startedAt",
+          "title"
+        ]
       },
       "PrecautionDTO": {
         "type": "object",
         "properties": {
           "precautionsTitle": {
-            "type": "string"
+            "type": "string",
+            "description": "주의사항 제목"
           },
           "precautionsContent": {
-            "type": "string"
+            "type": "string",
+            "description": "주의사항 내용"
           }
-        }
+        },
+        "required": [
+          "precautionsContent",
+          "precautionsTitle"
+        ]
       },
       "EditApplicantRequest": {
         "type": "object",
@@ -3894,16 +3939,16 @@
       "EmploymentDTO": {
         "type": "object",
         "properties": {
-          "employmentId": {
-            "type": "integer",
-            "format": "int64"
-          },
           "instarUrl": {
-            "type": "string"
+            "type": "string",
+            "description": "인스타 url",
+            "maxLength": 100,
+            "minLength": 10
           },
           "personNum": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "전화번호"
           },
           "sex": {
             "type": "string",
@@ -3911,24 +3956,34 @@
           },
           "startedAt": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "시작일"
           },
           "endedAt": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "종료일"
           },
           "recruitmentEnd": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "공고 마감일"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "공고 제목",
+            "maxLength": 200,
+            "minLength": 0
           },
           "content": {
-            "type": "string"
+            "type": "string",
+            "description": "공고 내용",
+            "maxLength": 500,
+            "minLength": 0
           },
           "category": {
             "type": "string",
+            "description": "LARGE/SMALL/VIEW/HEALING/EXPERIENCE",
             "enum": [
               "LARGE",
               "SMALL",
@@ -3939,26 +3994,31 @@
           },
           "latitude": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "숙소 위도"
           },
           "longitude": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "숙소 경도"
           },
           "hashtagName": {
             "type": "array",
+            "description": "해시태그",
             "items": {
               "type": "string"
             }
           },
           "benefitsContent": {
             "type": "array",
+            "description": "복리후생",
             "items": {
               "type": "string"
             }
           },
           "images": {
             "type": "array",
+            "description": "이미지",
             "items": {
               "type": "string",
               "format": "binary"
@@ -3966,14 +4026,34 @@
           },
           "precautions": {
             "type": "array",
+            "description": "주의사항",
             "items": {
               "$ref": "#/components/schemas/PrecautionDTO"
             }
           },
           "locationName": {
-            "type": "string"
+            "type": "string",
+            "description": "숙소 이름",
+            "maxLength": 200,
+            "minLength": 0
           }
-        }
+        },
+        "required": [
+          "benefitsContent",
+          "category",
+          "content",
+          "endedAt",
+          "hashtagName",
+          "latitude",
+          "locationName",
+          "longitude",
+          "personNum",
+          "precautions",
+          "recruitmentEnd",
+          "sex",
+          "startedAt",
+          "title"
+        ]
       },
       "TextContent": {
         "type": "object",
@@ -4414,35 +4494,58 @@
             "format": "int64"
           },
           "image": {
-            "type": "string"
+            "type": "string",
+            "description": "이미지 주소"
           },
           "hashtagName": {
             "type": "array",
+            "description": "해시태그",
             "items": {
               "type": "string"
             }
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "공고 제목",
+            "maxLength": 200,
+            "minLength": 0
           },
           "sex": {
-            "type": "string"
+            "type": "string",
+            "description": "Male/Female/All"
           },
           "recruitmentEnd": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "공고 마감일"
           },
           "content": {
-            "type": "string"
+            "type": "string",
+            "description": "공고 내용",
+            "maxLength": 500,
+            "minLength": 0
           },
           "locationName": {
-            "type": "string"
+            "type": "string",
+            "description": "숙소 이름",
+            "maxLength": 200,
+            "minLength": 0
           },
           "personNum": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "전화번호"
           }
-        }
+        },
+        "required": [
+          "content",
+          "hashtagName",
+          "locationName",
+          "personNum",
+          "recruitmentEnd",
+          "sex",
+          "title"
+        ]
       },
       "EmploymentInfoDTO": {
         "type": "object",
@@ -4453,66 +4556,90 @@
           },
           "images": {
             "type": "array",
+            "description": "이미지 주소",
             "items": {
               "type": "string"
             }
           },
           "hashtagName": {
             "type": "array",
+            "description": "해시태그",
             "items": {
               "type": "string"
             }
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "공고 제목",
+            "maxLength": 200,
+            "minLength": 0
           },
           "instarUrl": {
-            "type": "string"
+            "type": "string",
+            "description": "인스타 url",
+            "maxLength": 100,
+            "minLength": 10
           },
           "personNum": {
             "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "description": "전화번호"
           },
           "sex": {
-            "type": "string"
+            "type": "string",
+            "description": "Male/Female/All"
           },
           "startedAt": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "시작일"
           },
           "endedAt": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "종료일"
           },
           "recruitmentEnd": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "공고 마감일"
           },
           "content": {
-            "type": "string"
+            "type": "string",
+            "description": "공고 내용",
+            "maxLength": 500,
+            "minLength": 0
           },
           "latitude": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "숙소 위도"
           },
           "longitude": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "description": "숙소 경도"
           },
           "benefitsContent": {
             "type": "array",
+            "description": "복리후생",
             "items": {
               "type": "string"
             }
           },
           "phoneNum": {
-            "type": "string"
+            "type": "string",
+            "description": "전화번호"
           },
           "locationName": {
-            "type": "string"
+            "type": "string",
+            "description": "숙소 이름",
+            "maxLength": 200,
+            "minLength": 0
           },
           "category": {
             "type": "string",
+            "description": "LARGE/SMALL/VIEW/HEALING/EXPERIENCE",
             "enum": [
               "LARGE",
               "SMALL",
@@ -4523,11 +4650,29 @@
           },
           "precautions": {
             "type": "array",
+            "description": "주의사항",
             "items": {
               "$ref": "#/components/schemas/PrecautionDTO"
             }
           }
-        }
+        },
+        "required": [
+          "benefitsContent",
+          "category",
+          "content",
+          "endedAt",
+          "hashtagName",
+          "latitude",
+          "locationName",
+          "longitude",
+          "personNum",
+          "phoneNum",
+          "precautions",
+          "recruitmentEnd",
+          "sex",
+          "startedAt",
+          "title"
+        ]
       },
       "GetMessagesDto": {
         "type": "object",

@@ -235,7 +235,7 @@
         "operationId": "putEmploymentById",
         "parameters": [
           {
-            "name": "employmentDTO",
+            "name": "employment",
             "in": "query",
             "description": "공고 데이터 받아올 객체",
             "content": {
@@ -258,7 +258,7 @@
               "schema": {
                 "$ref": "#/components/schemas/EmploymentUpdateDTO"
               },
-              "example": " {\n  \"employment\": {\n    \"employmentId: 1,\n    \"instarUrl\": \"이미지 파일1, 이미지파일2\",\n    \"personNum\": 3,\n    \"sex\": \"여\",\n    \"startedAt\": \"2025-05-23\",\n    \"endedAt\": \"2025-05-23\",\n    \"recruitmentEnd\": \"2025-05-23\",\n    \"title\": \"맥스네 게하\",\n    \"content\": \"맥스네 게하 스텝 구합니당~\",\n    \"category\": \"LARGE\",\n    \"latitude\": 0.1,\n    \"longitude\": 0.1,\n    \"locationName\": \"제주특별자치도 서귀포시 성산읍 고성동서로 2\",\n    \"hashtagName\": [\n      \"string\"\n    ],\n    \"benefitsContent\": [\n      \"복리후생1\",\n      \"복리후생2\"\n    ],\n    \"precautions\": [\n      {\n        \"precautionsTitle\": \"일과 재미, 균형 잡기!\",\n        \"precautionsContent\": \"즐길 때는 확실히! 하지만 업무 시간엔 프로페셔널하게 행동해 주세요.\"\n      }\n    ]\n  },\n  \"images\": [\n    \"MultiPart 파일1\",\n     \"MultiPart 파일1\"\n  ]\n}\n"
+              "example": " {\n  {\n    \"employmentId\": 6,\n    \"instarUrl\": \"https://example.com\",\n    \"personNum\": 3,\n    \"sex\": \"여\",\n    \"startedAt\": \"2025-05-23\",\n    \"endedAt\": \"2025-05-24\",\n    \"recruitmentEnd\": \"2025-05-22\",\n    \"title\": \"맥스네 게하\",\n    \"content\": \"맥스네 게하 스텝 구합니당~\",\n    \"category\": \"LARGE\",\n    \"latitude\": 33.450701,\n    \"longitude\": 126.570667,\n    \"locationName\": \"제주특별자치도 서귀포시 성산읍\",\n    \"hashtagName\": [\"행복한\", \"게하\"],\n    \"benefitsContent\": [\"숙박\", \"밥\"],\n    \"precautions\": [\n      {\n        \"precautionsTitle\": \"청결도\",\n        \"precautionsContent\": \"청결도는 신경 써주세요\"\n      }\n    ],\n    \"imageUrls\": [\n    ]\n  }\n\n  },\n  \"images\": [\n    \"MultiPart 파일1\",\n     \"MultiPart 파일1\"\n  ]\n}\n"
             }
           },
           "required": true
@@ -2444,7 +2444,7 @@
                     "provider": "kakao",
                     "phone": "01088454426",
                     "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
-                    "gender": "FEMALE",
+                    "gender": "여자",
                     "birthDate": "2000-02-24",
                     "type": "STAFF"
                   }
@@ -2473,8 +2473,11 @@
                 "example": {
                   "status": "SUCCESS",
                   "data": {
+                    "id": 1,
                     "nickname": "미밍",
                     "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/300f16ce-1b8f-4826-9a19-83e8bfde04e0",
+                    "birthDate": "2000-02-24",
+                    "gender": "여자",
                     "type": "STAFF",
                     "onboarded": true
                   }
@@ -4178,9 +4181,6 @@
       },
       "MessageSendDto": {
         "type": "object",
-        "discriminator": {
-          "propertyName": "messageType"
-        },
         "properties": {
           "chatRoomId": {
             "type": "integer",
@@ -4343,6 +4343,14 @@
             "type": "string",
             "description": "프로필 이미지 링크"
           },
+          "gender": {
+            "type": "string",
+            "description": "성별: 남자 / 여자",
+            "enum": [
+              "남자",
+              "여자"
+            ]
+          },
           "birthDate": {
             "type": "string",
             "format": "date",
@@ -4363,11 +4371,31 @@
       "GetMeMinimumResponse": {
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "유저 ID"
+          },
           "nickname": {
-            "type": "string"
+            "type": "string",
+            "description": "닉네임"
           },
           "profileImage": {
-            "type": "string"
+            "type": "string",
+            "description": "프로필 이미지 링크"
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "description": "생년월일"
+          },
+          "gender": {
+            "type": "string",
+            "description": "성별: 남자 / 여자",
+            "enum": [
+              "남자",
+              "여자"
+            ]
           },
           "type": {
             "type": "string",

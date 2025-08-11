@@ -1240,6 +1240,14 @@
         ],
         "summary": "네이버 로그인",
         "operationId": "loginNaver",
+        "parameters": [
+          {
+            "name": "X-Platform",
+            "in": "header",
+            "description": "JWT 로그인 방식 전용",
+            "example": "mobile"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1298,6 +1306,14 @@
         ],
         "summary": "카카오 로그인",
         "operationId": "loginKakao",
+        "parameters": [
+          {
+            "name": "X-Platform",
+            "in": "header",
+            "description": "JWT 로그인 방식 전용",
+            "example": "mobile"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1355,6 +1371,14 @@
         ],
         "summary": "로컬/개발 환경 로그인",
         "operationId": "loginDev",
+        "parameters": [
+          {
+            "name": "X-Platform",
+            "in": "header",
+            "description": "JWT 로그인 방식 전용",
+            "example": "mobile"
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -3071,6 +3095,7 @@
                   "status": "SUCCESS",
                   "data": {
                     "id": 129,
+                    "userId": 2,
                     "title": "피카레스크",
                     "image": "https://1.jpg",
                     "detail": "ENFP | 만 27세 (남)"
@@ -4730,6 +4755,11 @@
             "type": "integer",
             "format": "int64",
             "description": "채팅방 ID"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "유저 ID"
           },
           "title": {
             "type": "string",

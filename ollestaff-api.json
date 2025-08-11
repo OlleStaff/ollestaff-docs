@@ -2922,7 +2922,7 @@
             "name": "category",
             "in": "query",
             "description": "카테고리 ( LARGE, SMALL ,VIEW, HEALING, EXPERIENCE )",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
               "enum": [

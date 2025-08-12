@@ -422,7 +422,10 @@
                     "images": [
                       "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
                       "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
-                    ]
+                    ],
+                    "gender": "남자",
+                    "birthDate": "1998-12-11",
+                    "phone": "01030891093"
                   }
                 }
               }
@@ -3203,7 +3206,10 @@
                     "images": [
                       "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
                       "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
-                    ]
+                    ],
+                    "gender": "남자",
+                    "birthDate": "1998-12-11",
+                    "phone": "01030891093"
                   }
                 }
               }

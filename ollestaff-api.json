@@ -3167,6 +3167,73 @@
         }
       }
     },
+    "/applicants/{applicantUserId}": {
+      "get": {
+        "tags": [
+          "APPLICANT"
+        ],
+        "summary": "지원서 조회",
+        "operationId": "getApplicant",
+        "parameters": [
+          {
+            "name": "applicantUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "지원서 조회 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "userId": "1",
+                    "nickname": "hoon",
+                    "profileImage": "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/bd0b323b-8463-4102-99e5-ec795e266009",
+                    "mbti": "ISFP",
+                    "link": "https://github.com/hoon-hoon",
+                    "introduction": "자기소개 / 지원 동기 입니다.",
+                    "appeal": "어필 사항 / 경력 사항 입니다",
+                    "images": [
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ece4c34b-bcd4-4d9f-b0d8-da4ad4e1b26c",
+                      "https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/66ffb1cb-43a5-46e4-9000-07d067442b7c"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "지원서 조회 권한 없음",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "NO_PERMISSION_TO_VIEW",
+                  "message": "지원서 조회 권한 없음"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "지원서 찾을 수 없음",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "APPLICANT_NOT_FOUND",
+                  "message": "지원서 찾을 수 없음"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/accompanies/my": {
       "get": {
         "tags": [

@@ -397,40 +397,6 @@
         }
       }
     },
-    "/chat-rooms/delete-my-chat-room": {
-      "put": {
-        "tags": [
-          "CHATROOM"
-        ],
-        "operationId": "deleteMyChatRoom",
-        "parameters": [
-          {
-            "name": "chatRoomIds",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseVoid"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/applicants/my": {
       "get": {
         "tags": [
@@ -1710,6 +1676,41 @@
                 "example": {
                   "status": "SUCCESS",
                   "data": 123
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "CHATROOM"
+        ],
+        "summary": "채팅방 삭제",
+        "description": "list 로 받은 채팅방 삭제",
+        "operationId": "deleteMyChatRoom",
+        "parameters": [
+          {
+            "name": "chatRoomIds",
+            "in": "query",
+            "description": "채팅방 id list",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "채팅방 삭제 성공",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SUCCESS"
                 }
               }
             }
@@ -3816,20 +3817,6 @@
           "precautionsContent",
           "precautionsTitle"
         ]
-      },
-      "ApiResponseVoid": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
-            "type": "object"
-          }
-        }
       },
       "EditApplicantRequest": {
         "type": "object",

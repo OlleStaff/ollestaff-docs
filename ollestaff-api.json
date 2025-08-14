@@ -2891,6 +2891,49 @@
         }
       }
     },
+    "/employments/un-write-reiview": {
+      "get": {
+        "tags": [
+          "EMPLOYMENT"
+        ],
+        "summary": "리뷰가 달리지 않은 일했던 공고 조회",
+        "operationId": "getUnwriteReviewEmployment",
+        "responses": {
+          "200": {
+            "description": "공고 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnWriteReviewEmploymentDTO"
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": [
+                    {
+                      "employmentId": 2,
+                      "startedAt": "2025-07-01",
+                      "endedAt": "2025-08-13",
+                      "title": "맥스네 게하"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "잘못된 경로",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "REVIEW_NOT_FOUND",
+                  "message": "잘못된 경로로 보낸 요청입니다."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/employments/all": {
       "get": {
         "tags": [
@@ -4808,6 +4851,36 @@
           "precautions",
           "recruitmentEnd",
           "sex",
+          "startedAt",
+          "title"
+        ]
+      },
+      "UnWriteReviewEmploymentDTO": {
+        "type": "object",
+        "properties": {
+          "employmentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date",
+            "description": "시작일"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "date",
+            "description": "종료일"
+          },
+          "title": {
+            "type": "string",
+            "description": "공고 제목",
+            "maxLength": 200,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "endedAt",
           "startedAt",
           "title"
         ]

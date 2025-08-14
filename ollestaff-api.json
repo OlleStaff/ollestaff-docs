@@ -397,6 +397,40 @@
         }
       }
     },
+    "/chat-rooms/delete-my-chat-room": {
+      "put": {
+        "tags": [
+          "CHATROOM"
+        ],
+        "operationId": "deleteMyChatRoom",
+        "parameters": [
+          {
+            "name": "chatRoomIds",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVoid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/applicants/my": {
       "get": {
         "tags": [
@@ -3782,6 +3816,20 @@
           "precautionsContent",
           "precautionsTitle"
         ]
+      },
+      "ApiResponseVoid": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
       },
       "EditApplicantRequest": {
         "type": "object",

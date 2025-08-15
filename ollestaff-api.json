@@ -2926,7 +2926,7 @@
         }
       }
     },
-    "/employments/un-write-reiview": {
+    "/employments/un-write-review": {
       "get": {
         "tags": [
           "EMPLOYMENT"

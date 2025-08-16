@@ -3089,7 +3089,7 @@
         "tags": [
           "EMPLOYMENT"
         ],
-        "summary": "공고 필터링 조회",
+        "summary": "좋아요한 공고들 조회",
         "operationId": "getAllLikeEmployment",
         "parameters": [
           {
@@ -3144,19 +3144,19 @@
             "content": {
               "application/json": {
                 "example": {
-                  "status": "REVIEW_NOT_FOUND",
+                  "status": "NOT_FOUND",
                   "message": "잘못된 경로로 보낸 요청입니다."
                 }
               }
             }
           },
-          "500": {
+          "400": {
             "description": "지원하지 않는 타입",
             "content": {
               "application/json": {
                 "example": {
-                  "status": "SERVER_ERROR",
-                  "message": "지원하지 않는 타입입니다.: ALL"
+                  "status": "UNSUPPORTED_TYPE",
+                  "message": "지원하지 않는 타입입니다 (ALL)"
                 }
               }
             }

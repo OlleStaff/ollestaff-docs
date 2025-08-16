@@ -3084,6 +3084,86 @@
         }
       }
     },
+    "/employments/all-like-employment": {
+      "get": {
+        "tags": [
+          "EMPLOYMENT"
+        ],
+        "summary": "공고 필터링 조회",
+        "operationId": "getAllLikeEmployment",
+        "parameters": [
+          {
+            "name": "cursorId",
+            "in": "query",
+            "description": "커서 id",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "페이지 사이즈",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "타입 ( IN_PROGRESS, END )",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ALL",
+                "IN_PROGRESS",
+                "END"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "공고 목록 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmploymentPreviewDTO"
+                },
+                "example": "   {\n         \"status\": \"SUCCESS\",\n         \"message\": null,\n         \"data\": {\n           \"employmentPreviewDTOS\": [\n             {\n               \"employmentId\": 1,\n               \"image\": https://olle-staff-image.s3.ap-northeast-2.amazonaws.com/images/ab34ab2e-8469-47a8-97b2-a6722e22b104\",\n               \"hashtagName\": [\n                 \"#아오\",\n                 \"#힘들어요\"\n               ],,\n               \"title\": \"맥스네 게하\",\n               \"sex\": \"male\",\n               \"recruitmentEnd\": \"2025-08-16\",\n               \"content\": \"하핫....\",\n               \"locationName\": \"함덕 해수욕장\",\n               \"personNum\": 12\n             }\n           ],\n           \"cursor\": 1,\n           \"hasNext\": false\n         }\n       }\n"
+              }
+            }
+          },
+          "404": {
+            "description": "잘못된 경로",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "REVIEW_NOT_FOUND",
+                  "message": "잘못된 경로로 보낸 요청입니다."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "지원하지 않는 타입",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "SERVER_ERROR",
+                  "message": "지원하지 않는 타입입니다.: ALL"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/chat/messages": {
       "get": {
         "tags": [
@@ -3704,7 +3784,7 @@
           "personNum": {
             "type": "integer",
             "format": "int64",
-            "description": "전화번호"
+            "description": "사람수"
           },
           "sex": {
             "type": "string",
@@ -4155,7 +4235,7 @@
           "personNum": {
             "type": "integer",
             "format": "int64",
-            "description": "전화번호"
+            "description": "사람수"
           },
           "sex": {
             "type": "string",
@@ -4766,7 +4846,7 @@
           "personNum": {
             "type": "integer",
             "format": "int64",
-            "description": "전화번호"
+            "description": "사람수"
           }
         },
         "required": [
@@ -4861,7 +4941,7 @@
           },
           "phoneNum": {
             "type": "string",
-            "description": "전화번호"
+            "description": "사람수"
           },
           "locationName": {
             "type": "string",

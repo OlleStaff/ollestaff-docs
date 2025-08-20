@@ -1808,9 +1808,9 @@
         "operationId": "accept",
         "parameters": [
           {
-            "name": "applicantId",
+            "name": "applicantUserId",
             "in": "query",
-            "description": "지원서 ID",
+            "description": "지원자 유저 ID",
             "required": true,
             "schema": {
               "type": "integer",
@@ -4507,9 +4507,6 @@
       },
       "MessageDto": {
         "type": "object",
-        "discriminator": {
-          "propertyName": "messageType"
-        },
         "properties": {
           "id": {
             "type": "string",

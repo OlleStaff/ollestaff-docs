@@ -103,6 +103,17 @@
                 }
               }
             }
+          },
+          "422": {
+            "description": "전화번호 인증 불일치",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "PHONE_VERIFICATION_ERROR",
+                  "message": "전화번호 인증 불일치"
+                }
+              }
+            }
           }
         }
       },
@@ -131,6 +142,17 @@
               "application/json": {
                 "example": {
                   "status": "SUCCESS"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "전화번호 인증 불일치",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "PHONE_VERIFICATION_ERROR",
+                  "message": "전화번호 인증 불일치"
                 }
               }
             }

@@ -2928,7 +2928,10 @@
                       "점심 제공",
                       "정시 퇴근"
                     ],
-                    "phoneNum": "01012345678"
+                    "phoneNum": "01012345678",
+                    "rating": "NaN",
+                    "reviewCount": 0,
+                    "heart": true
                   }
                 }
               }
@@ -4914,7 +4917,7 @@
           "personNum": {
             "type": "integer",
             "format": "int64",
-            "description": "전화번호"
+            "description": "사람수"
           },
           "sex": {
             "type": "string",
@@ -4985,6 +4988,19 @@
             "items": {
               "$ref": "#/components/schemas/PrecautionDTO"
             }
+          },
+          "rating": {
+            "type": "number",
+            "format": "double",
+            "description": "별점"
+          },
+          "reviewCount": {
+            "type": "integer",
+            "format": "int64",
+            "description": "리뷰 개수"
+          },
+          "heart": {
+            "type": "boolean"
           }
         },
         "required": [

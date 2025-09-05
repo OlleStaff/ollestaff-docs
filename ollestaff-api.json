@@ -936,17 +936,6 @@
                 }
               }
             }
-          },
-          "409": {
-            "description": "사업자 인증 실패 (이미 사업자 등록이 되어있음)",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "BUSINESS_REGISTRATION_ALREADY_CERTIFICATED",
-                  "message": "이미 사업자 등록이 되어있습니다."
-                }
-              }
-            }
           }
         }
       },
@@ -1162,28 +1151,6 @@
                 "example": {
                   "status": "INTERNAL_SERVER_ERROR",
                   "message": "저장에 실패하였습니다."
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "존재하지 않는 리뷰",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "INVALID_REVIEW_ID",
-                  "message": "존재하지 않는 리뷰입니다."
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "중복된 댓글",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "DUPLICATE_COMMENT",
-                  "message": "이미 이 리뷰에 댓글을 작성하셨습니다."
                 }
               }
             }

@@ -1860,17 +1860,6 @@
                 }
               }
             }
-          },
-          "409": {
-            "description": "지원서 저장 실패 (이미 존재하는 지원서)",
-            "content": {
-              "application/json": {
-                "example": {
-                  "status": "APPLICANT_DUPLICATED",
-                  "message": "이미 지원서가 있습니다."
-                }
-              }
-            }
           }
         }
       }
@@ -3800,7 +3789,7 @@
           "title": {
             "type": "string",
             "description": "공고 제목",
-            "maxLength": 200,
+            "maxLength": 35,
             "minLength": 0
           },
           "content": {
@@ -3917,25 +3906,25 @@
           "mbti": {
             "type": "string",
             "description": "MBTI",
-            "maxLength": 10000,
-            "minLength": 0
+            "minLength": 1,
+            "pattern": "(?i)^[EI][SN][TF][JP]$"
           },
           "link": {
             "type": "string",
             "description": "링크 첨부",
-            "maxLength": 10000,
+            "maxLength": 200,
             "minLength": 0
           },
           "introduction": {
             "type": "string",
             "description": "자기소개 / 지원 동기 작성",
-            "maxLength": 10000,
+            "maxLength": 5000,
             "minLength": 0
           },
           "appeal": {
             "type": "string",
             "description": "어필 사항 / 경력 사항 작성",
-            "maxLength": 10000,
+            "maxLength": 5000,
             "minLength": 0
           },
           "images": {
@@ -3945,7 +3934,7 @@
               "type": "string"
             },
             "maxItems": 6,
-            "minItems": 0
+            "minItems": 1
           },
           "newImages": {
             "type": "array",
@@ -4251,7 +4240,7 @@
           "title": {
             "type": "string",
             "description": "공고 제목",
-            "maxLength": 200,
+            "maxLength": 35,
             "minLength": 0
           },
           "content": {
@@ -4428,19 +4417,27 @@
           },
           "mbti": {
             "type": "string",
-            "description": "MBTI"
+            "description": "MBTI",
+            "minLength": 1,
+            "pattern": "(?i)^[EI][SN][TF][JP]$"
           },
           "link": {
             "type": "string",
-            "description": "링크 첨부"
+            "description": "링크 첨부",
+            "maxLength": 200,
+            "minLength": 0
           },
           "introduction": {
             "type": "string",
-            "description": "자기소개 / 지원 동기 작성"
+            "description": "자기소개 / 지원 동기 작성",
+            "maxLength": 5000,
+            "minLength": 0
           },
           "appeal": {
             "type": "string",
-            "description": "어필 사항 / 경력 사항 작성"
+            "description": "어필 사항 / 경력 사항 작성",
+            "maxLength": 5000,
+            "minLength": 0
           },
           "images": {
             "type": "array",
@@ -4448,7 +4445,9 @@
             "items": {
               "type": "string",
               "format": "binary"
-            }
+            },
+            "maxItems": 6,
+            "minItems": 1
           }
         }
       },
@@ -4808,7 +4807,7 @@
           "title": {
             "type": "string",
             "description": "공고 제목",
-            "maxLength": 200,
+            "maxLength": 35,
             "minLength": 0
           },
           "sex": {
@@ -4872,7 +4871,7 @@
           "title": {
             "type": "string",
             "description": "공고 제목",
-            "maxLength": 200,
+            "maxLength": 35,
             "minLength": 0
           },
           "instarUrl": {
